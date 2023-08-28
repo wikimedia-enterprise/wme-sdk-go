@@ -219,14 +219,29 @@ func NewClient(ops ...func(clt *Client)) API {
 
 // Client is a struct that represents an HTTP client used to interact with the API.
 type Client struct {
-	HTTPClient           *http.Client // HTTP client used to send requests.
-	UserAgent            string       // User-agent header value sent with each request.
-	BaseUrl              string       // Base URL for all API requests.
-	RealtimeURL          string       // Streaming URL endpoint for streaming.
-	AccessToken          string       // Access token used to authenticate requests.
-	DownloadMinChunkSize int          // Minimum chunk size used for downloading resources.
-	DownloadChunkSize    int          // Chunk size used for downloading resources.
-	DownloadConcurrency  int          // Number of simultaneous downloads allowed.
+	// HTTPClient is the HTTP client used to send requests.
+	HTTPClient *http.Client
+
+	// UserAgent is the user-agent header value sent with each request.
+	UserAgent string
+
+	// BaseUrl is the base URL for all API requests.
+	BaseUrl string
+
+	// RealtimeURL is the base URL for all realtime API requests.
+	RealtimeURL string
+
+	// AccessToken is the access token used to authenticate requests.
+	AccessToken string
+
+	// DownloadMinChunkSize is the minimum chunk size used for downloading resources.
+	DownloadMinChunkSize int
+
+	// DownloadChunkSize is the chunk size used for downloading resources.
+	DownloadChunkSize int
+
+	// DownloadConcurrency is the number of simultaneous downloads allowed.
+	DownloadConcurrency int
 }
 
 func (c *Client) newRequest(ctx context.Context, url string, mtd string, pth string, req *Request) (*http.Request, error) {
