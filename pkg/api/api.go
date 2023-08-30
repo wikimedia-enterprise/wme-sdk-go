@@ -171,6 +171,8 @@ type AccessTokenSetter interface {
 // API interface tha encapsulates the whole functionality of the client.
 // Can be used with composition in unit testing.
 type API interface {
+	AllReader
+	AccessTokenSetter
 	CodesGetter
 	CodeGetter
 	LanguagesGetter
@@ -187,13 +189,11 @@ type API interface {
 	SnapshotsGetter
 	SnapshotGetter
 	SnapshotHeader
-	SnapshotDownloader
 	SnapshotReader
-	AllReader
-	AccessTokenSetter
+	SnapshotDownloader
 	ArticlesGetter
-	ArticlesStreamer
 	StructuredContentsGetter
+	ArticlesStreamer
 }
 
 // NewClient returns a new instance of the Client that implements the API interface.
@@ -520,11 +520,6 @@ func (c *Client) subscribeToEntity(ctx context.Context, pth string, req *Request
 	return c.readLoop(ctx, res.Body, cbk)
 }
 
-// SetAccessToken sets the access token for the client.
-func (c *Client) SetAccessToken(tkn string) {
-	c.AccessToken = tkn
-}
-
 // ReadAll reads the contents of the given io.Reader and calls the given ReadCallback function
 // with each chunk of data read.
 func (c *Client) ReadAll(ctx context.Context, rdr io.Reader, cbk ReadCallback) error {
@@ -553,6 +548,11 @@ func (c *Client) ReadAll(ctx context.Context, rdr io.Reader, cbk ReadCallback) e
 	}
 
 	return nil
+}
+
+// SetAccessToken sets the access token for the client.
+func (c *Client) SetAccessToken(tkn string) {
+	c.AccessToken = tkn
 }
 
 // GetCodes retrieves a list of codes, and returns an error if any.
