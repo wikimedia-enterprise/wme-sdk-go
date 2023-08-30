@@ -205,6 +205,7 @@ func NewClient(ops ...func(clt *Client)) API {
 		DownloadMinChunkSize: 5242880,
 		DownloadChunkSize:    5242880 * 5,
 		DownloadConcurrency:  10,
+		ScannerBufferSize:    20971520,
 		UserAgent:            "",
 		BaseUrl:              "https://api.enterprise.wikimedia.com/",
 		RealtimeURL:          "https://realtime.enterprise.wikimedia.com/",
@@ -242,6 +243,9 @@ type Client struct {
 
 	// DownloadConcurrency is the number of simultaneous downloads allowed.
 	DownloadConcurrency int
+
+	// ScannerBufferSize is the buffer size for the scanner when it reads from the API.
+	ScannerBufferSize int
 }
 
 func (c *Client) newRequest(ctx context.Context, url string, mtd string, pth string, req *Request) (*http.Request, error) {
@@ -312,37 +316,9 @@ func (c *Client) getEntity(ctx context.Context, req *Request, pth string, val in
 	return json.NewDecoder(res.Body).Decode(val)
 }
 
-func (c *Client) readAll(ctx context.Context, rdr io.Reader, cbk ReadCallback) error {
-	gzr, err := pgzip.NewReader(rdr)
-
-	if err != nil {
-		return err
-	}
-
-	trr := tar.NewReader(gzr)
-
-	for {
-		_, err := trr.Next()
-
-		if err == io.EOF {
-			break
-		}
-
-		if err != nil {
-			return err
-		}
-
-		if err := c.readLoop(ctx, trr, cbk); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func (c *Client) readLoop(ctx context.Context, rdr io.Reader, cbk ReadCallback) error {
 	scn := bufio.NewScanner(rdr)
-	scn.Buffer([]byte{}, 20971520)
+	scn.Buffer([]byte{}, c.ScannerBufferSize)
 
 	for scn.Scan() {
 		art := new(Article)
@@ -373,7 +349,7 @@ func (c *Client) readEntity(ctx context.Context, pth string, cbk ReadCallback) e
 	}
 
 	defer res.Body.Close()
-	return c.readAll(ctx, res.Body, cbk)
+	return c.ReadAll(ctx, res.Body, cbk)
 }
 
 func (c *Client) headEntity(ctx context.Context, pth string) (*Headers, error) {
@@ -549,6 +525,36 @@ func (c *Client) SetAccessToken(tkn string) {
 	c.AccessToken = tkn
 }
 
+// ReadAll reads the contents of the given io.Reader and calls the given ReadCallback function
+// with each chunk of data read.
+func (c *Client) ReadAll(ctx context.Context, rdr io.Reader, cbk ReadCallback) error {
+	gzr, err := pgzip.NewReader(rdr)
+
+	if err != nil {
+		return err
+	}
+
+	trr := tar.NewReader(gzr)
+
+	for {
+		_, err := trr.Next()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if err := c.readLoop(ctx, trr, cbk); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // GetCodes retrieves a list of codes, and returns an error if any.
 func (c *Client) GetCodes(ctx context.Context, req *Request) ([]*Code, error) {
 	cds := []*Code{}
@@ -667,10 +673,4 @@ func (c *Client) GetStructuredContents(ctx context.Context, nme string, req *Req
 // as they arrive. The callback function must implement the ReadCallback interface.
 func (c *Client) StreamArticles(ctx context.Context, req *Request, cbk ReadCallback) error {
 	return c.subscribeToEntity(ctx, "articles", req, cbk)
-}
-
-// ReadAll reads the contents of the given io.Reader and calls the given ReadCallback function
-// with each chunk of data read.
-func (c *Client) ReadAll(ctx context.Context, rdr io.Reader, cbk ReadCallback) error {
-	return c.readAll(ctx, rdr, cbk)
 }
