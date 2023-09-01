@@ -5,6 +5,7 @@ import (
 	"embed"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -130,17 +131,17 @@ type baseEntityTestSuite struct {
 	req *api.Request
 }
 
-func (s *baseEntityTestSuite) SetupSuite() error {
+func (s *baseEntityTestSuite) SetupSuite() {
 	fle, err := testData.Open(s.fph)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	dta, err := io.ReadAll(fle)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	rtr := http.NewServeMux()
@@ -155,8 +156,6 @@ func (s *baseEntityTestSuite) SetupSuite() error {
 	s.clt = api.NewClient(func(clt *api.Client) {
 		clt.BaseUrl = fmt.Sprintf("%s/", s.srv.URL)
 	})
-
-	return nil
 }
 
 func (s *baseEntityTestSuite) TearDownSuite() {
@@ -210,7 +209,6 @@ func TestGetCodes(t *testing.T) {
 }
 
 type getCodeTestSuite struct {
-	suite.Suite
 	baseEntityTestSuite
 	idr string
 }
