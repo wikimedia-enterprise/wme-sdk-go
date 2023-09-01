@@ -119,16 +119,19 @@ func TestSetAccessToken(t *testing.T) {
 	suite.Run(t, new(setAccessTokenTestSuite))
 }
 
-type entityTestSuite struct {
+type baseEntityTestSuite struct {
 	suite.Suite
+	sts int
+	fph string
+	pth string
 	ctx context.Context
 	srv *httptest.Server
 	clt api.API
 	req *api.Request
 }
 
-func (s *entityTestSuite) SetupTest(sts int, pth string, fph string) error {
-	fle, err := testData.Open(fph)
+func (s *baseEntityTestSuite) SetupSuite() error {
+	fle, err := testData.Open(s.fph)
 
 	if err != nil {
 		return err
@@ -141,8 +144,8 @@ func (s *entityTestSuite) SetupTest(sts int, pth string, fph string) error {
 	}
 
 	rtr := http.NewServeMux()
-	rtr.HandleFunc(fmt.Sprintf("/v2/%s", pth), func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(sts)
+	rtr.HandleFunc(fmt.Sprintf("/v2/%s", s.pth), func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(s.sts)
 		w.Write(dta)
 	})
 
@@ -156,22 +159,17 @@ func (s *entityTestSuite) SetupTest(sts int, pth string, fph string) error {
 	return nil
 }
 
-func (s *entityTestSuite) TearDownTest() {
+func (s *baseEntityTestSuite) TearDownSuite() {
 	s.srv.Close()
 }
 
 type getCodesTestSuite struct {
-	entityTestSuite
-	sts int
-	fph string
+	baseEntityTestSuite
 }
 
-func (s *getCodesTestSuite) SetupTest() {
-	s.entityTestSuite.SetupTest(s.sts, "codes", s.fph)
-}
-
-func (s *getCodesTestSuite) TearDownTest() {
-	s.entityTestSuite.TearDownTest()
+func (s *getCodesTestSuite) SetupSuite() {
+	s.pth = "codes"
+	s.baseEntityTestSuite.SetupSuite()
 }
 
 func (s *getCodesTestSuite) TestGetCodes() {
@@ -195,12 +193,63 @@ func (s *getCodesTestSuite) TestGetCodes() {
 func TestGetCodes(t *testing.T) {
 	for _, tcs := range []*getCodesTestSuite{
 		{
-			sts: http.StatusOK,
-			fph: "testdata/codes.json",
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/codes.json",
+			},
 		},
 		{
-			sts: http.StatusUnauthorized,
-			fph: "testdata/error.json",
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getCodeTestSuite struct {
+	suite.Suite
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getCodeTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namepace_0"
+	s.pth = fmt.Sprintf("codes/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getCodeTestSuite) TestGetCode() {
+	cde, err := s.clt.GetCode(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(cde.Identifier)
+		s.Empty(cde.Name)
+		s.Empty(cde.Description)
+		s.Error(err)
+	} else {
+		s.NotEmpty(cde.Identifier)
+		s.NotEmpty(cde.Name)
+		s.NotEmpty(cde.Description)
+		s.NoError(err)
+	}
+}
+
+func TestGetCode(t *testing.T) {
+	for _, tcs := range []*getCodeTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/code.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
 		},
 	} {
 		suite.Run(t, tcs)
