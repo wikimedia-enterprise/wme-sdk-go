@@ -51,3 +51,24 @@ func TestReadAll(t *testing.T) {
 		suite.Run(t, testCase)
 	}
 }
+
+type setAccessTokenTestSuite struct {
+	suite.Suite
+	clt *api.Client
+	tkn string
+}
+
+func (s *setAccessTokenTestSuite) SetupTest() {
+	s.tkn = "foo"
+	s.clt = new(api.Client)
+}
+
+func (s *setAccessTokenTestSuite) TestSetAccessToken() {
+	s.clt.SetAccessToken(s.tkn)
+
+	s.Equal(s.tkn, s.clt.AccessToken)
+}
+
+func TestSetAccessToken(t *testing.T) {
+	suite.Run(t, new(setAccessTokenTestSuite))
+}
