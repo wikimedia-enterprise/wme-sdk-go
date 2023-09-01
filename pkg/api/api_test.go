@@ -448,3 +448,98 @@ func TestGetProject(t *testing.T) {
 		suite.Run(t, tcs)
 	}
 }
+
+type getNamespacesTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *getNamespacesTestSuite) SetupSuite() {
+	s.pth = "namespaces"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getNamespacesTestSuite) TestGetNamespaces() {
+	nss, err := s.clt.GetNamespaces(s.ctx, s.req)
+
+	for _, nsp := range nss {
+		if nsp.Identifier != 0 {
+			s.NotEmpty(nsp.Identifier)
+		}
+
+		s.NotEmpty(nsp.Name)
+		s.NotEmpty(nsp.Description)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(nss)
+		s.Error(err)
+	} else {
+		s.NotEmpty(nss)
+		s.NoError(err)
+	}
+}
+
+func TestGetNamespaces(t *testing.T) {
+	for _, tcs := range []*getNamespacesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/namespaces.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getNamespaceTestSuite struct {
+	baseEntityTestSuite
+	idr int
+}
+
+func (s *getNamespaceTestSuite) SetupSuite() {
+	s.idr = 14
+	s.pth = fmt.Sprintf("namespaces/%d", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getNamespaceTestSuite) TestGetNamespace() {
+	nsp, err := s.clt.GetNamespace(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(nsp.Identifier)
+		s.Empty(nsp.Name)
+		s.Empty(nsp.Description)
+		s.Error(err)
+	} else {
+		s.NotEmpty(nsp.Identifier)
+		s.NotEmpty(nsp.Name)
+		s.NotEmpty(nsp.Description)
+		s.NoError(err)
+	}
+}
+
+func TestGetNamespace(t *testing.T) {
+	for _, tcs := range []*getNamespaceTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/namespace.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
