@@ -3,8 +3,10 @@ package api_test
 import (
 	"context"
 	"embed"
+	"fmt"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -115,4 +117,74 @@ func (s *setAccessTokenTestSuite) TestSetAccessToken() {
 
 func TestSetAccessToken(t *testing.T) {
 	suite.Run(t, new(setAccessTokenTestSuite))
+}
+
+type entityTestSuite struct {
+	suite.Suite
+	ctx context.Context
+	srv *httptest.Server
+	clt api.API
+	req *api.Request
+}
+
+func (s *entityTestSuite) SetupTest(pth string, fph string) error {
+	fle, err := testData.Open(fph)
+
+	if err != nil {
+		return err
+	}
+
+	dta, err := io.ReadAll(fle)
+
+	if err != nil {
+		return err
+	}
+
+	rtr := http.NewServeMux()
+	rtr.HandleFunc(fmt.Sprintf("/v2/%s", pth), func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write(dta)
+	})
+
+	s.ctx = context.Background()
+	s.srv = httptest.NewServer(rtr)
+	s.req = new(api.Request)
+	s.clt = api.NewClient(func(clt *api.Client) {
+		clt.BaseUrl = fmt.Sprintf("%s/", s.srv.URL)
+	})
+
+	return nil
+}
+
+func (s *entityTestSuite) TearDownTest() {
+	s.srv.Close()
+}
+
+type getCodesTestSuite struct {
+	entityTestSuite
+}
+
+func (s *getCodesTestSuite) SetupTest() {
+	s.entityTestSuite.SetupTest("codes", "testdata/codes.json")
+}
+
+func (s *getCodesTestSuite) TearDownTest() {
+	s.entityTestSuite.TearDownTest()
+}
+
+func (s *getCodesTestSuite) TestGetCodes() {
+	cds, err := s.clt.GetCodes(s.ctx, s.req)
+
+	for _, cde := range cds {
+		s.NotEmpty(cde.Identifier)
+		s.NotEmpty(cde.Name)
+		s.NotEmpty(cde.Description)
+	}
+
+	s.NotEmpty(cds)
+	s.NoError(err)
+}
+
+func TestGetCodes(t *testing.T) {
+	suite.Run(t, new(getCodesTestSuite))
 }
