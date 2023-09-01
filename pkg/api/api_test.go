@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"io"
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -12,6 +13,56 @@ import (
 
 //go:embed testdata/*
 var testData embed.FS
+
+type newClientTestSuite struct {
+	suite.Suite
+}
+
+func (s *newClientTestSuite) TestNewClient() {
+	clt := api.NewClient().(*api.Client)
+
+	s.NotNil(clt)
+	s.NotNil(clt.HTTPClient)
+	s.NotZero(clt.DownloadMinChunkSize)
+	s.NotZero(clt.DownloadChunkSize)
+	s.NotZero(clt.DownloadConcurrency)
+	s.NotZero(clt.ScannerBufferSize)
+	s.NotZero(clt.BaseUrl)
+	s.NotZero(clt.RealtimeURL)
+}
+
+func (s *newClientTestSuite) TestNewClientWithOpts() {
+	httpClient := new(http.Client)
+	downloadMinChunkSize := 100
+	downloadChunkSize := 25
+	downloadConcurrency := 2
+	scannerBufferSize := 100
+	baseUrl := "https://foo.bar"
+	realtimeURL := "https://foo.bar/realtime"
+	opt := func(clt *api.Client) {
+		clt.HTTPClient = httpClient
+		clt.DownloadMinChunkSize = downloadMinChunkSize
+		clt.DownloadChunkSize = downloadChunkSize
+		clt.DownloadConcurrency = downloadConcurrency
+		clt.ScannerBufferSize = scannerBufferSize
+		clt.BaseUrl = baseUrl
+		clt.RealtimeURL = realtimeURL
+	}
+	clt := api.NewClient(opt).(*api.Client)
+
+	s.NotNil(clt)
+	s.Equal(httpClient, clt.HTTPClient)
+	s.Equal(downloadMinChunkSize, clt.DownloadMinChunkSize)
+	s.Equal(downloadChunkSize, clt.DownloadChunkSize)
+	s.Equal(downloadConcurrency, clt.DownloadConcurrency)
+	s.Equal(scannerBufferSize, clt.ScannerBufferSize)
+	s.Equal(baseUrl, clt.BaseUrl)
+	s.Equal(realtimeURL, clt.RealtimeURL)
+}
+
+func TestNewClient(t *testing.T) {
+	suite.Run(t, new(newClientTestSuite))
+}
 
 type readAllTestSuite struct {
 	suite.Suite
