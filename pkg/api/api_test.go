@@ -69,12 +69,11 @@ type readAllTestSuite struct {
 	ctx context.Context
 	rdr io.ReadCloser
 	clt api.API
-	pth string
 }
 
 func (s *readAllTestSuite) SetupTest() {
 	var err error
-	s.rdr, err = testData.Open(s.pth)
+	s.rdr, err = testData.Open("testdata/simplewiki_namespace_0.tar.gz")
 	s.NoError(err)
 
 	s.clt = api.NewClient()
@@ -94,13 +93,7 @@ func (s *readAllTestSuite) TestReadAll() {
 }
 
 func TestReadAll(t *testing.T) {
-	for _, testCase := range []*readAllTestSuite{
-		{
-			pth: "testdata/simplewiki_namespace_0.tar.gz",
-		},
-	} {
-		suite.Run(t, testCase)
-	}
+	suite.Run(t, new(readAllTestSuite))
 }
 
 type setAccessTokenTestSuite struct {
