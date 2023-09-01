@@ -348,3 +348,103 @@ func TestGetLanguage(t *testing.T) {
 		suite.Run(t, tcs)
 	}
 }
+
+type getProjectsTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *getProjectsTestSuite) SetupSuite() {
+	s.pth = "projects"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getProjectsTestSuite) TestGetProjects() {
+	prs, err := s.clt.GetProjects(s.ctx, s.req)
+
+	for _, prj := range prs {
+		s.NotEmpty(prj.Name)
+		s.NotEmpty(prj.Identifier)
+		s.NotEmpty(prj.URL)
+		s.NotEmpty(prj.Code)
+		s.NotNil(prj.InLanguage)
+		s.NotEmpty(prj.InLanguage.Identifier)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(prs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(prs)
+		s.NoError(err)
+	}
+}
+
+func TestGetProjects(t *testing.T) {
+	for _, tcs := range []*getProjectsTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/projects.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getProjectTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getProjectTestSuite) SetupSuite() {
+	s.idr = "enwiki"
+	s.pth = fmt.Sprintf("projects/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getProjectTestSuite) TestGetProject() {
+	prj, err := s.clt.GetProject(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(prj.Name)
+		s.Empty(prj.Identifier)
+		s.Empty(prj.URL)
+		s.Empty(prj.Code)
+		s.Nil(prj.InLanguage)
+		s.Error(err)
+	} else {
+		s.NotEmpty(prj.Name)
+		s.NotEmpty(prj.Identifier)
+		s.NotEmpty(prj.URL)
+		s.NotEmpty(prj.Code)
+		s.NotNil(prj.InLanguage)
+		s.NotEmpty(prj.InLanguage.Identifier)
+		s.NoError(err)
+	}
+}
+
+func TestGetProject(t *testing.T) {
+	for _, tcs := range []*getProjectTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/project.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
