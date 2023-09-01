@@ -126,9 +126,9 @@ type baseEntityTestSuite struct {
 	fph string
 	pth string
 	ctx context.Context
+	req *api.Request
 	srv *httptest.Server
 	clt api.API
-	req *api.Request
 }
 
 func (s *baseEntityTestSuite) SetupSuite() {
@@ -151,8 +151,8 @@ func (s *baseEntityTestSuite) SetupSuite() {
 	})
 
 	s.ctx = context.Background()
-	s.srv = httptest.NewServer(rtr)
 	s.req = new(api.Request)
+	s.srv = httptest.NewServer(rtr)
 	s.clt = api.NewClient(func(clt *api.Client) {
 		clt.BaseUrl = fmt.Sprintf("%s/", s.srv.URL)
 	})
@@ -241,6 +241,101 @@ func TestGetCode(t *testing.T) {
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
 				fph: "testdata/code.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getLanguagesTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *getLanguagesTestSuite) SetupSuite() {
+	s.pth = "languages"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getLanguagesTestSuite) TestGetLanguages() {
+	lgs, err := s.clt.GetLanguages(s.ctx, s.req)
+
+	for _, lng := range lgs {
+		s.NotEmpty(lng.Identifier)
+		s.NotEmpty(lng.Name)
+		s.NotEmpty(lng.AlternateName)
+		s.NotEmpty(lng.Direction)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(lgs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(lgs)
+		s.NoError(err)
+	}
+}
+
+func TestGetLanguages(t *testing.T) {
+	for _, tcs := range []*getLanguagesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/languages.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getLanguageTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getLanguageTestSuite) SetupSuite() {
+	s.idr = "en"
+	s.pth = fmt.Sprintf("languages/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getLanguageTestSuite) TestGetLanguage() {
+	lng, err := s.clt.GetLanguage(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(lng.Identifier)
+		s.Empty(lng.Name)
+		s.Empty(lng.AlternateName)
+		s.Empty(lng.Direction)
+		s.Error(err)
+	} else {
+		s.NotEmpty(lng.Identifier)
+		s.NotEmpty(lng.Name)
+		s.NotEmpty(lng.AlternateName)
+		s.NotEmpty(lng.Direction)
+		s.NoError(err)
+	}
+}
+
+func TestGetLanguage(t *testing.T) {
+	for _, tcs := range []*getLanguageTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/language.json",
 			},
 		},
 		{
