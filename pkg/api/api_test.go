@@ -127,7 +127,7 @@ type entityTestSuite struct {
 	req *api.Request
 }
 
-func (s *entityTestSuite) SetupTest(pth string, fph string) error {
+func (s *entityTestSuite) SetupTest(sts int, pth string, fph string) error {
 	fle, err := testData.Open(fph)
 
 	if err != nil {
@@ -142,7 +142,7 @@ func (s *entityTestSuite) SetupTest(pth string, fph string) error {
 
 	rtr := http.NewServeMux()
 	rtr.HandleFunc(fmt.Sprintf("/v2/%s", pth), func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(sts)
 		w.Write(dta)
 	})
 
@@ -162,10 +162,12 @@ func (s *entityTestSuite) TearDownTest() {
 
 type getCodesTestSuite struct {
 	entityTestSuite
+	sts int
+	fph string
 }
 
 func (s *getCodesTestSuite) SetupTest() {
-	s.entityTestSuite.SetupTest("codes", "testdata/codes.json")
+	s.entityTestSuite.SetupTest(s.sts, "codes", s.fph)
 }
 
 func (s *getCodesTestSuite) TearDownTest() {
@@ -181,10 +183,26 @@ func (s *getCodesTestSuite) TestGetCodes() {
 		s.NotEmpty(cde.Description)
 	}
 
-	s.NotEmpty(cds)
-	s.NoError(err)
+	if s.sts != http.StatusOK {
+		s.Empty(cds)
+		s.Error(err)
+	} else {
+		s.NotEmpty(cds)
+		s.NoError(err)
+	}
 }
 
 func TestGetCodes(t *testing.T) {
-	suite.Run(t, new(getCodesTestSuite))
+	for _, tcs := range []*getCodesTestSuite{
+		{
+			sts: http.StatusOK,
+			fph: "testdata/codes.json",
+		},
+		{
+			sts: http.StatusUnauthorized,
+			fph: "testdata/error.json",
+		},
+	} {
+		suite.Run(t, tcs)
+	}
 }
