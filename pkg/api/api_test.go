@@ -1099,7 +1099,7 @@ func (s *getArticlesTestSuite) TestGetArticles() {
 }
 
 func TestGetArticles(t *testing.T) {
-	for _, tc := range []*getArticlesTestSuite{
+	for _, tcs := range []*getArticlesTestSuite{
 		{
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
@@ -1113,7 +1113,7 @@ func TestGetArticles(t *testing.T) {
 			},
 		},
 	} {
-		suite.Run(t, tc)
+		suite.Run(t, tcs)
 	}
 }
 
@@ -1148,7 +1148,7 @@ func (s *getStructuredContentsTestSuite) TestGetStructuredContents() {
 }
 
 func TestGetStructuredContents(t *testing.T) {
-	for _, tc := range []*getStructuredContentsTestSuite{
+	for _, tcs := range []*getStructuredContentsTestSuite{
 		{
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
@@ -1162,7 +1162,7 @@ func TestGetStructuredContents(t *testing.T) {
 			},
 		},
 	} {
-		suite.Run(t, tc)
+		suite.Run(t, tcs)
 	}
 }
 
@@ -1194,7 +1194,7 @@ func (s *streamArticlesTestSuite) TestStreamArticles() {
 }
 
 func TestStreamArticles(t *testing.T) {
-	for _, tc := range []*streamArticlesTestSuite{
+	for _, tcs := range []*streamArticlesTestSuite{
 		{
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
@@ -1208,6 +1208,6 @@ func TestStreamArticles(t *testing.T) {
 			},
 		},
 	} {
-		suite.Run(t, tc)
+		suite.Run(t, tcs)
 	}
 }
