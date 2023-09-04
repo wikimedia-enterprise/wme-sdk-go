@@ -208,7 +208,7 @@ func NewClient(ops ...func(clt *Client)) API {
 		DownloadConcurrency:  10,
 		ScannerBufferSize:    20971520,
 		UserAgent:            "",
-		BaseUrl:              "https://api.enterprise.wikimedia.com/",
+		BaseURL:              "https://api.enterprise.wikimedia.com/",
 		RealtimeURL:          "https://realtime.enterprise.wikimedia.com/",
 	}
 
@@ -228,7 +228,7 @@ type Client struct {
 	UserAgent string
 
 	// BaseUrl is the base URL for all API requests.
-	BaseUrl string
+	BaseURL string
 
 	// RealtimeURL is the base URL for all realtime API requests.
 	RealtimeURL string
@@ -301,7 +301,7 @@ func (c *Client) do(hrq *http.Request) (*http.Response, error) {
 }
 
 func (c *Client) getEntity(ctx context.Context, req *Request, pth string, val interface{}) error {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodPost, pth, req)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodPost, pth, req)
 
 	if err != nil {
 		return err
@@ -337,7 +337,7 @@ func (c *Client) readLoop(ctx context.Context, rdr io.Reader, cbk ReadCallback) 
 }
 
 func (c *Client) readEntity(ctx context.Context, pth string, cbk ReadCallback) error {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodGet, pth, nil)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodGet, pth, nil)
 
 	if err != nil {
 		return err
@@ -354,7 +354,7 @@ func (c *Client) readEntity(ctx context.Context, pth string, cbk ReadCallback) e
 }
 
 func (c *Client) headEntity(ctx context.Context, pth string) (*Headers, error) {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodHead, pth, nil)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodHead, pth, nil)
 
 	if err != nil {
 		return nil, err
@@ -463,7 +463,7 @@ func (c *Client) downloadEntity(ctx context.Context, pth string, wrr io.WriteSee
 				<-smr
 			}()
 
-			hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodGet, pth, nil)
+			hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodGet, pth, nil)
 			hrq.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", cnk.start, cnk.end))
 
 			if err != nil {

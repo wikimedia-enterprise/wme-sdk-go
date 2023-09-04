@@ -32,7 +32,7 @@ func (s *newClientTestSuite) TestNewClient() {
 	s.NotZero(clt.DownloadChunkSize)
 	s.NotZero(clt.DownloadConcurrency)
 	s.NotZero(clt.ScannerBufferSize)
-	s.NotZero(clt.BaseUrl)
+	s.NotZero(clt.BaseURL)
 	s.NotZero(clt.RealtimeURL)
 }
 
@@ -42,7 +42,7 @@ func (s *newClientTestSuite) TestNewClientWithOpts() {
 	downloadChunkSize := 25
 	downloadConcurrency := 2
 	scannerBufferSize := 100
-	baseUrl := "https://foo.bar"
+	baseURL := "https://foo.bar"
 	realtimeURL := "https://foo.bar/realtime"
 	opt := func(clt *api.Client) {
 		clt.HTTPClient = httpClient
@@ -50,7 +50,7 @@ func (s *newClientTestSuite) TestNewClientWithOpts() {
 		clt.DownloadChunkSize = downloadChunkSize
 		clt.DownloadConcurrency = downloadConcurrency
 		clt.ScannerBufferSize = scannerBufferSize
-		clt.BaseUrl = baseUrl
+		clt.BaseURL = baseURL
 		clt.RealtimeURL = realtimeURL
 	}
 	clt := api.NewClient(opt).(*api.Client)
@@ -61,7 +61,7 @@ func (s *newClientTestSuite) TestNewClientWithOpts() {
 	s.Equal(downloadChunkSize, clt.DownloadChunkSize)
 	s.Equal(downloadConcurrency, clt.DownloadConcurrency)
 	s.Equal(scannerBufferSize, clt.ScannerBufferSize)
-	s.Equal(baseUrl, clt.BaseUrl)
+	s.Equal(baseURL, clt.BaseURL)
 	s.Equal(realtimeURL, clt.RealtimeURL)
 }
 
@@ -178,7 +178,8 @@ func (s *baseEntityTestSuite) SetupSuite() {
 	s.req = new(api.Request)
 	s.srv = httptest.NewServer(rtr)
 	s.clt = api.NewClient(func(clt *api.Client) {
-		clt.BaseUrl = fmt.Sprintf("%s/", s.srv.URL)
+		clt.BaseURL = fmt.Sprintf("%s/", s.srv.URL)
+		clt.RealtimeURL = fmt.Sprintf("%s/", s.srv.URL)
 	})
 }
 
@@ -1152,6 +1153,52 @@ func TestGetStructuredContents(t *testing.T) {
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
 				fph: "testdata/structured-contents.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tc)
+	}
+}
+
+type streamArticlesTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *streamArticlesTestSuite) SetupSuite() {
+	s.pth = "articles"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *streamArticlesTestSuite) TestStreamArticles() {
+	nmc := 0
+	err := s.clt.StreamArticles(s.ctx, s.req, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestStreamArticles(t *testing.T) {
+	for _, tc := range []*streamArticlesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/articles.ndjson",
 			},
 		},
 		{
