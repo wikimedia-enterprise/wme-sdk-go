@@ -872,6 +872,60 @@ func TestGetSnapshots(t *testing.T) {
 	}
 }
 
+type getSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getSnapshotTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getSnapshotTestSuite) TestGetSnapshot() {
+	spt, err := s.clt.GetSnapshot(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(spt.Identifier)
+		s.Empty(spt.Version)
+		s.Empty(spt.DateModified)
+		s.Empty(spt.IsPartOf)
+		s.Empty(spt.InLanguage)
+		s.Nil(spt.Namespace)
+		s.Empty(spt.Size)
+		s.Error(err)
+	} else {
+		s.NotEmpty(spt.Identifier)
+		s.NotEmpty(spt.Version)
+		s.NotEmpty(spt.DateModified)
+		s.NotEmpty(spt.IsPartOf)
+		s.NotEmpty(spt.InLanguage)
+		s.NotNil(spt.Namespace)
+		s.NotEmpty(spt.Size)
+		s.NoError(err)
+	}
+}
+
+func TestGetSnapshot(t *testing.T) {
+	for _, tcs := range []*getSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/snapshot.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
