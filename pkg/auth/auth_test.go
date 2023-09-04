@@ -117,3 +117,56 @@ func TestLogin(t *testing.T) {
 		suite.Run(t, tcs)
 	}
 }
+
+type refreshTokenTestSuite struct {
+	endpointTestSuite
+	req *auth.RefreshTokenRequest
+}
+
+func (s *refreshTokenTestSuite) SetupSuite() {
+	s.pth = "/token-refresh"
+	s.hrq = new(auth.RefreshTokenRequest)
+	s.endpointTestSuite.SetupSuite()
+}
+
+func (s *refreshTokenTestSuite) TestRefreshToken() {
+	res, err := s.clt.RefreshToken(s.ctx, s.req)
+
+	s.Assert().Equal(s.req, s.hrq)
+
+	if s.sts != http.StatusOK {
+		s.Empty(res)
+		s.Error(err)
+	} else {
+		s.NotEmpty(res.IDToken)
+		s.NotEmpty(res.AccessToken)
+		s.NotEmpty(res.ExpiresIn)
+		s.NoError(err)
+	}
+}
+
+func TestRefreshToken(t *testing.T) {
+	req := &auth.RefreshTokenRequest{
+		Username:     "foo",
+		RefreshToken: "bar",
+	}
+
+	for _, tsc := range []*refreshTokenTestSuite{
+		{
+			req: req,
+			endpointTestSuite: endpointTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/token-refresh.json",
+			},
+		},
+		{
+			req: req,
+			endpointTestSuite: endpointTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tsc)
+	}
+}
