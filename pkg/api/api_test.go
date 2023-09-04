@@ -822,6 +822,56 @@ func TestReadBatch(t *testing.T) {
 	}
 }
 
+type getSnapshotsTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *getSnapshotsTestSuite) SetupSuite() {
+	s.pth = "snapshots"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getSnapshotsTestSuite) TestGetSnapshots() {
+	sps, err := s.clt.GetSnapshots(s.ctx, s.req)
+
+	for _, spt := range sps {
+		s.NotEmpty(spt.Identifier)
+		s.NotEmpty(spt.Version)
+		s.NotEmpty(spt.DateModified)
+		s.NotEmpty(spt.IsPartOf)
+		s.NotEmpty(spt.InLanguage)
+		s.NotNil(spt.Namespace)
+		s.NotEmpty(spt.Size)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(sps)
+		s.Error(err)
+	} else {
+		s.NotEmpty(sps)
+		s.NoError(err)
+	}
+}
+
+func TestGetSnapshots(t *testing.T) {
+	for _, tcs := range []*getSnapshotsTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/snapshots.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
