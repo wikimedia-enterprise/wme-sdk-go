@@ -29,17 +29,21 @@ type endpointTestSuite struct {
 }
 
 func (s *endpointTestSuite) SetupSuite() {
-	fle, err := testData.Open(s.fph)
+	dta := []byte{}
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	if len(s.fph) > 0 {
+		fle, err := testData.Open(s.fph)
 
-	defer fle.Close()
-	dta, err := io.ReadAll(fle)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	if err != nil {
-		log.Fatal(err)
+		defer fle.Close()
+		dta, err = io.ReadAll(fle)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	rtr := http.NewServeMux()
@@ -157,6 +161,53 @@ func TestRefreshToken(t *testing.T) {
 			endpointTestSuite: endpointTestSuite{
 				sts: http.StatusOK,
 				fph: "testdata/token-refresh.json",
+			},
+		},
+		{
+			req: req,
+			endpointTestSuite: endpointTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tsc)
+	}
+}
+
+type revokeTokenTestSuite struct {
+	endpointTestSuite
+	req *auth.RevokeTokenRequest
+}
+
+func (s *revokeTokenTestSuite) SetupSuite() {
+	s.pth = "/token-revoke"
+	s.hrq = new(auth.RevokeTokenRequest)
+	s.endpointTestSuite.SetupSuite()
+}
+
+func (s *revokeTokenTestSuite) TestRevokeToken() {
+	err := s.clt.RevokeToken(s.ctx, s.req)
+
+	s.Assert().Equal(s.req, s.hrq)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestRevokeToken(t *testing.T) {
+	req := &auth.RevokeTokenRequest{
+		RefreshToken: "foo",
+	}
+
+	for _, tsc := range []*revokeTokenTestSuite{
+		{
+			req: req,
+			endpointTestSuite: endpointTestSuite{
+				sts: http.StatusOK,
 			},
 		},
 		{
