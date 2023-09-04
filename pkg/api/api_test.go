@@ -592,3 +592,52 @@ func TestGetArticles(t *testing.T) {
 		suite.Run(t, tc)
 	}
 }
+
+type getStructuredContentsTestSuite struct {
+	baseEntityTestSuite
+	nme string
+}
+
+func (s *getStructuredContentsTestSuite) SetupSuite() {
+	s.nme = "Squirrel"
+	s.pth = fmt.Sprintf("structured-contents/%s", s.nme)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getStructuredContentsTestSuite) TestGetStructuredContents() {
+	scs, err := s.clt.GetStructuredContents(s.ctx, s.nme, s.req)
+
+	for _, sct := range scs {
+		s.NotEmpty(sct.Name)
+		s.NotEmpty(sct.Identifier)
+		s.NotEmpty(sct.URL)
+		s.NotEmpty(sct.Abstract)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(scs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(scs)
+		s.NoError(err)
+	}
+}
+
+func TestGetStructuredContents(t *testing.T) {
+	for _, tc := range []*getStructuredContentsTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/structured-contents.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tc)
+	}
+}
