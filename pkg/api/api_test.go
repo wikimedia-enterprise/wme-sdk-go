@@ -972,6 +972,53 @@ func TestHeadSnapshot(t *testing.T) {
 	}
 }
 
+type downloadSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *downloadSnapshotTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadSnapshotTestSuite) TestDownloadSnapshot() {
+	tmf, err := os.CreateTemp("", "spt_tmp.tar.gz")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer tmf.Close()
+	err = s.clt.DownloadSnapshot(s.ctx, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadSnapshot(t *testing.T) {
+	for _, tcs := range []*downloadSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
