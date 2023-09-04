@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 	"github.com/wikimedia-enterprise/wme-sdk-go/pkg/api"
@@ -536,6 +537,59 @@ func TestGetNamespace(t *testing.T) {
 		{
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getBatchesTestSuite struct {
+	baseEntityTestSuite
+	dte *time.Time
+}
+
+func (s *getBatchesTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.pth = fmt.Sprintf("batches/%s", s.dte.Format(api.DateFormat))
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getBatchesTestSuite) TestGetBatches() {
+	bts, err := s.clt.GetBatches(s.ctx, s.dte, s.req)
+
+	for _, bth := range bts {
+		s.NotEmpty(bth.Identifier)
+		s.NotEmpty(bth.Version)
+		s.NotEmpty(bth.DateModified)
+		s.NotEmpty(bth.IsPartOf)
+		s.NotEmpty(bth.InLanguage)
+		s.NotNil(bth.Namespace)
+		s.NotEmpty(bth.Size)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(bts)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bts)
+		s.NoError(err)
+	}
+}
+
+func TestGetBatches(t *testing.T) {
+	for _, tcs := range []*getBatchesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/batches.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
 				fph: "testdata/error.json",
 			},
 		},
