@@ -1019,6 +1019,54 @@ func TestDownloadSnapshot(t *testing.T) {
 	}
 }
 
+type readSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *readSnapshotTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readSnapshotTestSuite) TestReadSnapshot() {
+	nmc := 0
+	err := s.clt.ReadSnapshot(s.ctx, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadSnapshot(t *testing.T) {
+	for _, tcs := range []*readSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
