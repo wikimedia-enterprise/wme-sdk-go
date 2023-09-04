@@ -771,6 +771,57 @@ func TestDownloadBatch(t *testing.T) {
 	}
 }
 
+type readBathTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *readBathTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("batches/%s/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readBathTestSuite) TestReadBatch() {
+	nmc := 0
+	err := s.clt.ReadBatch(s.ctx, s.dte, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadBatch(t *testing.T) {
+	for _, tcs := range []*readBathTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
