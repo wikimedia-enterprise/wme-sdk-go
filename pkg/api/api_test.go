@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
@@ -71,21 +72,25 @@ func TestNewClient(t *testing.T) {
 type readAllTestSuite struct {
 	suite.Suite
 	ctx context.Context
-	rdr io.ReadCloser
+	rcr io.ReadCloser
 	clt api.API
 }
 
-func (s *readAllTestSuite) SetupTest() {
+func (s *readAllTestSuite) SetupSuite() {
 	var err error
-	s.rdr, err = testData.Open("testdata/simplewiki_namespace_0.tar.gz")
+	s.rcr, err = testData.Open("testdata/simplewiki_namespace_0.tar.gz")
 	s.NoError(err)
 
 	s.clt = api.NewClient()
 }
 
+func (s *readAllTestSuite) TearDownSuite() {
+	s.rcr.Close()
+}
+
 func (s *readAllTestSuite) TestReadAll() {
 	nmc := 0
-	err := s.clt.ReadAll(s.ctx, s.rdr, func(art *api.Article) error {
+	err := s.clt.ReadAll(s.ctx, s.rcr, func(art *api.Article) error {
 		s.NotEmpty(art.Name)
 		s.NotEmpty(art.Identifier)
 		nmc++
@@ -130,26 +135,44 @@ type baseEntityTestSuite struct {
 	req *api.Request
 	srv *httptest.Server
 	clt api.API
+	mtd string
 }
 
 func (s *baseEntityTestSuite) SetupSuite() {
-	fle, err := testData.Open(s.fph)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dta, err := io.ReadAll(fle)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	rtr := http.NewServeMux()
-	rtr.HandleFunc(fmt.Sprintf("/v2/%s", s.pth), func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(s.sts)
-		w.Write(dta)
-	})
+	var hdr func(w http.ResponseWriter, r *http.Request)
+
+	switch s.mtd {
+	case http.MethodHead:
+		hdr = func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Length", "4827640")
+			w.Header().Set("Content-Type", "binary/octet-stream")
+			w.Header().Set("ETag", "528262227e37be50594b5a0ac0bcb752")
+			w.Header().Set("Last-Modified", "Mon, 04 Sep 2023 11:08:50 UTC")
+			w.WriteHeader(s.sts)
+		}
+	case http.MethodGet:
+	default:
+		fle, err := testData.Open(s.fph)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		dta, err := io.ReadAll(fle)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		hdr = func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(s.sts)
+			w.Header().Set("Content-Type", "application/octet-stream")
+			w.Write(dta)
+		}
+	}
+
+	rtr.HandleFunc(fmt.Sprintf("/v2/%s", s.pth), hdr)
 
 	s.ctx = context.Background()
 	s.req = new(api.Request)
@@ -636,6 +659,105 @@ func TestGetBatch(t *testing.T) {
 			baseEntityTestSuite: baseEntityTestSuite{
 				sts: http.StatusOK,
 				fph: "testdata/batch.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headBatchTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *headBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("batches/%s/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headBatchTestSuite) TestHeadBatch() {
+	bth, err := s.clt.HeadBatch(s.ctx, s.dte, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(bth)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bth)
+		s.NotEmpty(bth.ContentLength)
+		s.NotEmpty(bth.ContentType)
+		s.NotEmpty(bth.ETag)
+		s.NotEmpty(bth.LastModified)
+		s.NoError(err)
+	}
+}
+
+func TestHeadBatch(t *testing.T) {
+	for _, tcs := range []*headBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadBatchTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *downloadBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("batches/%s/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadBatchTestSuite) TestDownloadBatch() {
+	tmf, err := os.CreateTemp("", "bth_tmp.tar.gz")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer tmf.Close()
+	err = s.clt.DownloadBatch(s.ctx, s.dte, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadBatch(t *testing.T) {
+	for _, tcs := range []*downloadBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
 			},
 		},
 		{
