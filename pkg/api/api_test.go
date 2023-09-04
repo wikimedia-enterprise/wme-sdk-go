@@ -543,3 +543,52 @@ func TestGetNamespace(t *testing.T) {
 		suite.Run(t, tcs)
 	}
 }
+
+type getArticlesTestSuite struct {
+	baseEntityTestSuite
+	nme string
+}
+
+func (s *getArticlesTestSuite) SetupSuite() {
+	s.nme = "Squirrel"
+	s.pth = fmt.Sprintf("articles/%s", s.nme)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getArticlesTestSuite) TestGetArticles() {
+	ars, err := s.clt.GetArticles(s.ctx, s.nme, s.req)
+
+	for _, art := range ars {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		s.NotEmpty(art.Abstract)
+		s.NotEmpty(art.URL)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(ars)
+		s.Error(err)
+	} else {
+		s.NotEmpty(ars)
+		s.NoError(err)
+	}
+}
+
+func TestGetArticles(t *testing.T) {
+	for _, tc := range []*getArticlesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/articles.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tc)
+	}
+}
