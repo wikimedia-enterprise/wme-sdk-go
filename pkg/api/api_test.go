@@ -598,6 +598,57 @@ func TestGetBatches(t *testing.T) {
 	}
 }
 
+type getBatchTestSuite struct {
+	baseEntityTestSuite
+	dte *time.Time
+	idr string
+}
+
+func (s *getBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("batches/%s/%s", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getBatchTestSuite) TestGetBatch() {
+	bth, err := s.clt.GetBatch(s.ctx, s.dte, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(bth)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bth.Identifier)
+		s.NotEmpty(bth.Version)
+		s.NotEmpty(bth.DateModified)
+		s.NotEmpty(bth.IsPartOf)
+		s.NotEmpty(bth.InLanguage)
+		s.NotNil(bth.Namespace)
+		s.NotEmpty(bth.Size)
+		s.NoError(err)
+	}
+}
+
+func TestGetBatch(t *testing.T) {
+	for _, tcs := range []*getBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/batch.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string
