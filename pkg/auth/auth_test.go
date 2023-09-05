@@ -53,7 +53,7 @@ func (s *endpointTestSuite) SetupSuite() {
 		}
 
 		w.WriteHeader(s.sts)
-		w.Write(dta)
+		_, _ = w.Write(dta)
 	})
 
 	s.srv = httptest.NewServer(rtr)

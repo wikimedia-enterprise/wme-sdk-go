@@ -168,7 +168,7 @@ func (s *baseEntityTestSuite) SetupSuite() {
 		hdr = func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(s.sts)
 			w.Header().Set("Content-Type", "application/octet-stream")
-			w.Write(dta)
+			_, _ = w.Write(dta)
 		}
 	}
 

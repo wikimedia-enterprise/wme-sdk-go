@@ -4,7 +4,7 @@ Official WME SDK for Go programming language.
 
 Checkout our [documentation](https://enterprise.wikimedia.com/docs/) and [website](https://enterprise.wikimedia.com/) for more information about the APIs.
 
-## Getting Started
+## Getting started
 
 - installing the SDK:
 
