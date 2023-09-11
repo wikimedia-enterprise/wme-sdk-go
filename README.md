@@ -1,8 +1,8 @@
-# WME SDK for GO
+# Wikimedia Enterprise SDK: GO
 
-Official WME SDK for Go programming language.
+Official Wikimedia Enterprise SDK for Go programming language.
 
-Checkout our [documentation](https://enterprise.wikimedia.com/docs/) and [website](https://enterprise.wikimedia.com/) for more information about the APIs.
+See our [api documentation](https://enterprise.wikimedia.com/docs/) and [website](https://enterprise.wikimedia.com/) for more information about the APIs.
 
 ## Getting started
 
