@@ -18,7 +18,8 @@ import (
 	"github.com/klauspost/pgzip"
 )
 
-const dateFormat = "2006-01-02"
+// DateFormat is the date format used for the API.
+const DateFormat = "2006-01-02"
 
 // Filter represents a filter to be applied to a dataset.
 type Filter struct {
@@ -207,7 +208,7 @@ func NewClient(ops ...func(clt *Client)) API {
 		DownloadConcurrency:  10,
 		ScannerBufferSize:    20971520,
 		UserAgent:            "",
-		BaseUrl:              "https://api.enterprise.wikimedia.com/",
+		BaseURL:              "https://api.enterprise.wikimedia.com/",
 		RealtimeURL:          "https://realtime.enterprise.wikimedia.com/",
 	}
 
@@ -227,7 +228,7 @@ type Client struct {
 	UserAgent string
 
 	// BaseUrl is the base URL for all API requests.
-	BaseUrl string
+	BaseURL string
 
 	// RealtimeURL is the base URL for all realtime API requests.
 	RealtimeURL string
@@ -300,7 +301,7 @@ func (c *Client) do(hrq *http.Request) (*http.Response, error) {
 }
 
 func (c *Client) getEntity(ctx context.Context, req *Request, pth string, val interface{}) error {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodPost, pth, req)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodPost, pth, req)
 
 	if err != nil {
 		return err
@@ -336,7 +337,7 @@ func (c *Client) readLoop(ctx context.Context, rdr io.Reader, cbk ReadCallback) 
 }
 
 func (c *Client) readEntity(ctx context.Context, pth string, cbk ReadCallback) error {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodGet, pth, nil)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodGet, pth, nil)
 
 	if err != nil {
 		return err
@@ -353,7 +354,7 @@ func (c *Client) readEntity(ctx context.Context, pth string, cbk ReadCallback) e
 }
 
 func (c *Client) headEntity(ctx context.Context, pth string) (*Headers, error) {
-	hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodHead, pth, nil)
+	hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodHead, pth, nil)
 
 	if err != nil {
 		return nil, err
@@ -462,7 +463,7 @@ func (c *Client) downloadEntity(ctx context.Context, pth string, wrr io.WriteSee
 				<-smr
 			}()
 
-			hrq, err := c.newRequest(ctx, c.BaseUrl, http.MethodGet, pth, nil)
+			hrq, err := c.newRequest(ctx, c.BaseURL, http.MethodGet, pth, nil)
 			hrq.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", cnk.start, cnk.end))
 
 			if err != nil {
@@ -606,28 +607,28 @@ func (c *Client) GetNamespace(ctx context.Context, idr int, req *Request) (*Name
 // GetBatches retrieves a list of batches for a specific date and request, and returns an error if any.
 func (c *Client) GetBatches(ctx context.Context, dte *time.Time, req *Request) ([]*Batch, error) {
 	bts := []*Batch{}
-	return bts, c.getEntity(ctx, req, fmt.Sprintf("batches/%s", dte.Format(dateFormat)), &bts)
+	return bts, c.getEntity(ctx, req, fmt.Sprintf("batches/%s", dte.Format(DateFormat)), &bts)
 }
 
 // GetBatch retrieves a single batch for a specific date and ID, and returns an error if any.
 func (c *Client) GetBatch(ctx context.Context, dte *time.Time, idr string, req *Request) (*Batch, error) {
 	bth := new(Batch)
-	return bth, c.getEntity(ctx, req, fmt.Sprintf("batches/%s/%s", dte.Format(dateFormat), idr), bth)
+	return bth, c.getEntity(ctx, req, fmt.Sprintf("batches/%s/%s", dte.Format(DateFormat), idr), bth)
 }
 
 // HeadBatch retrieves only the headers of a single batch for a specific date and ID, and returns an error if any.
 func (c *Client) HeadBatch(ctx context.Context, dte *time.Time, idr string) (*Headers, error) {
-	return c.headEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(dateFormat), idr))
+	return c.headEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(DateFormat), idr))
 }
 
 // ReadBatch reads the contents of a single batch for a specific date and ID, and invokes the specified callback function for each chunk read.
 func (c *Client) ReadBatch(ctx context.Context, dte *time.Time, idr string, cbk ReadCallback) error {
-	return c.readEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(dateFormat), idr), cbk)
+	return c.readEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(DateFormat), idr), cbk)
 }
 
 // DownloadBatch downloads the contents of a single batch for a specific date and ID, and writes the data to the specified WriteSeeker.
 func (c *Client) DownloadBatch(ctx context.Context, dte *time.Time, idr string, wsk io.WriteSeeker) error {
-	return c.downloadEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(dateFormat), idr), wsk)
+	return c.downloadEntity(ctx, fmt.Sprintf("batches/%s/%s/download", dte.Format(DateFormat), idr), wsk)
 }
 
 // GetSnapshots retrieves a list of all snapshots and returns an error if any.

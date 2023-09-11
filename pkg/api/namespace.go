@@ -7,9 +7,9 @@ type Namespace struct {
 	// Name is the human-readable name of this namespace.
 	Name string `json:"name,omitempty"`
 
-	// AlternateName is an alias for the namespace.
-	AlternateName string `json:"alternate_name,omitempty"`
-
 	// Identifier is the unique identifier for this namespace.
 	Identifier int `json:"identifier"`
+
+	// Description is a short description of this namespace.
+	Description string `json:"description,omitempty"`
 }

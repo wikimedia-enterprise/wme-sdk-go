@@ -1,0 +1,5 @@
+{
+  "id_token": "...id token...",
+  "access_token": "...access token...",
+  "expires_in": 3600
+}
