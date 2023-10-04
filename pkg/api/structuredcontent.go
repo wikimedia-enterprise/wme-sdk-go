@@ -13,6 +13,9 @@ type StructuredContent struct {
 	// Abstract is a summary of the structured content (article).
 	Abstract string `json:"abstract,omitempty"`
 
+	// Description is a description of the structured content (article).
+	Description string `json:"description,omitempty"`
+
 	// Version is the metadata about the version of the structured content (article).
 	Version *Version `json:"version,omitempty"`
 
