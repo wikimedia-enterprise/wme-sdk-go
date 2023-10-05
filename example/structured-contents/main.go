@@ -36,7 +36,7 @@ func main() {
 	acl.SetAccessToken(lgn.AccessToken)
 
 	req := &api.Request{
-		Fields: []string{"name", "abstract"},
+		Fields: []string{"name", "abstract", "description"},
 		Filters: []*api.Filter{
 			{
 				Field: "in_language.identifier",
@@ -53,5 +53,6 @@ func main() {
 	for _, sct := range scs {
 		log.Println(sct.Name)
 		log.Println(sct.Abstract)
+		log.Println(sct.Description)
 	}
 }
