@@ -43,6 +43,9 @@ type StructuredContent struct {
 	// InfoBox are the parts included inside the structured content (article).
 	InfoBox []*Part `json:"infobox,omitempty"`
 
+	// ArticleSections are the section parts included inside the structured content (article).
+	ArticleSections []*Part `json:"article_sections,omitempty"`
+
 	// Image specifies the image related to the structured content (article).
 	Image *Image `json:"image,omitempty"`
 }
