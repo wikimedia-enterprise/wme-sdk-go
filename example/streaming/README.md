@@ -13,7 +13,7 @@ Refer to the documentation [here](https://enterprise.wikimedia.com/docs/realtime
 i) Connect to realtime streaming using filters and field selection. 
 
 ```bash
-POST https://api.enterprise.wikimedia.com/v2/articles
+POST https://realtime.enterprise.wikimedia.com/v2/articles
 ```
 
 with request parameters:
