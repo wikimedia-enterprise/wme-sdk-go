@@ -170,7 +170,7 @@ params = {
 }
 ```
 
-b) Using `since_per_partition`
+c) Using `since_per_partition`
 This way of reconnection is not recommended due to performance issues. Please use a) or b) instead.
 
 As a query parameter, one can pass a map of int:string date in RFC3339. e.g, {"1": "2023-06-05T12:00:00Z", "2": "2023-06-05T12:00:00Z"}. With this example since_per_partition, the client will receive events with date_published >= time 2023-06-05T12:00:00Z from partition 1.
