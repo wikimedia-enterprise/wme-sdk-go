@@ -128,7 +128,7 @@ While consuming the articles, we record either:
 ```
 partition -> latest offset consumed
 partition -> latest date_published consumed
-``
+```
 
 We make use of the above record to reconnect in one of the following ways:
 
