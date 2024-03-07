@@ -12,7 +12,7 @@ See our [api documentation](https://enterprise.wikimedia.com/docs/) and [website
 go get github.com/wikimedia-enterprise/wme-sdk-go
 ```
 
-- expose your credentials (if you don't have credentials already, [sing up](https://dashboard.enterprise.wikimedia.com/signup/)):
+- expose your credentials (if you don't have credentials already, [sign up](https://dashboard.enterprise.wikimedia.com/signup/)):
 
 ```bash
 export WME_USERNAME="...your username...";
