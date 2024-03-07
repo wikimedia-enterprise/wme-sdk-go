@@ -184,6 +184,6 @@ params = {
 }
 ```
 
-For the relevant partitions (0, 2, 3, 4) not included in the since_per_partition in the above params1, the client will receive events as they appear from those partitions (latest first).
+For the relevant partitions (0, 2, 3, 4) not included in the since_per_partition in the above params, the client will receive events as they appear from those partitions (latest first).
 
 The length/size of the since_per_partition must be <= 50 (capped by the total number of partitions).
