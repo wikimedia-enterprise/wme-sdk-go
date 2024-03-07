@@ -5,7 +5,8 @@ Refer to the documentation [here](https://enterprise.wikimedia.com/docs/on-deman
 
 
 
-ii) Get pre-parsed articles with name `Montreal` from English Wikipedia with selected fields.
+ii) Get pre-parsed articles with name `Montreal` from English Wikipedia with selected fields. 
+Other example [here](./README.md)
 
 ```bash
 POST https://api.enterprise.wikimedia.com/v2/structured-contents/Montreal
