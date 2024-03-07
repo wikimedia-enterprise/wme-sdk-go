@@ -2213,7 +2213,7 @@ GET https://api.enterprise.wikimedia.com/v2/languages
 ```
 </details>
 
-ii) Metadata on specific language, without filter or field selection
+ii) Metadata on a specific language, without filter or field selection
 
 ```bash
 GET https://api.enterprise.wikimedia.com/v2/languages/fr

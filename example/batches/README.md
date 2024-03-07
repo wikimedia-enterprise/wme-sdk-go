@@ -6,8 +6,8 @@ These APIs provide information on the available batches, their metadata, and all
 Allows filtering and field selection when fetching batches metadata. 
 Allows parallel downloading using [Range headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range).
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/realtime/#available-hourly-batches).
-The articles included in the batches follow [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/article.go) schema.
-The batches metadata follow [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/snapshot.go) schema.
+The articles included in the batches follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/article.go) schema.
+The batches metadata follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/snapshot.go) schema.
 
 
 

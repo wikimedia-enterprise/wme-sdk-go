@@ -2,7 +2,6 @@
 Used to fetch pre-parsed articles in their latest revision/version from all supported projects and languages. 
 Allows filtering and field selection. Allows to limit articles when doing cross-project, cross-language lookup.
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/on-demand/#article-structured-contents-beta).
-The articles are based on [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/article.go) schema.
 
 
 
@@ -5805,4 +5804,4 @@ Note: Max allowed limit is 10. Default limit is 3.
 </detail>
 
 
-ii) Get pre-parsed articles with name `Montreal` from English Wikipedia with selected fields. Example (here)[https://github.com/wikimedia-enterprise/wme-sdk-go/tree/feature/add-examples/example/structured-contents/example.md]
+ii) Get pre-parsed articles with name `Montreal` from English Wikipedia with selected fields. Example [here](./more_examples.md).

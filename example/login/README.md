@@ -1,5 +1,5 @@
 # Authentication API examples
-Used to managing access token and changing password. Refer to the documentation [here](https://enterprise.wikimedia.com/docs/authentication/).
+Used for managing access token and changing password. Refer to the documentation [here](https://enterprise.wikimedia.com/docs/authentication/).
 
 ## Login example
 Get access token and refresh token by sending in username and password.

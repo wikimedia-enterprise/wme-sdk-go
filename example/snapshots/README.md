@@ -4,8 +4,8 @@ Snapshots for each project-namespace are updated monthly (for free tier users) a
 Allows filtering and field selection when fetching snapshots metadata. 
 Allows parallel downloading using [Range headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range).
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/snapshot/).
-The articles included in the snapshots follow [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/article.go) schema.
-The snapshot metadata follow [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/snapshot.go) schema.
+The articles included in the snapshots follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/article.go) schema.
+The snapshot metadata follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/snapshot.go) schema.
 
 
 
@@ -840,7 +840,7 @@ GET https://api.enterprise.wikimedia.com/v2/snapshots/afwikibooks_namespace_0/do
 with header:
 ```json
 {
-    "Range": "bytes=100000-215077"
+    "Range": "bytes=99001-215077"
 }
 ```
 

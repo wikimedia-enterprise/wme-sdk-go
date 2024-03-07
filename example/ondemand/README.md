@@ -2,7 +2,7 @@
 Used to fetch articles in their latest revision/version from all supported projects and languages. 
 Allows filtering and field selection. Allows to limit articles when doing cross-project, cross-language lookup.
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/on-demand/#article-lookup).
-The articles are based on [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/article.go) schema.
+The articles are based on [this]https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/article.go) schema.
 
 
 
@@ -1461,7 +1461,7 @@ Response:
 ]
 ```
 
-iii) Narrow down to one project
+iii) Narrow down to one project, namespace.
 
 ```bash
 POST https://api.enterprise.wikimedia.com/v2/articles/Montreal

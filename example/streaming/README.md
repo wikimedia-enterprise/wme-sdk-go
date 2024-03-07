@@ -1,5 +1,5 @@
 # Realtime Streaming API 
-This API is used to get a stream of events related to new article create, article update, article visibility-change, article move and article delete, from all the supported projects and namespaces. The events follow [this](https://github.com/wikimedia-enterprise/wikimedia-enterprise/blob/main/general/schema/article.go) schema.
+This API is used to get a stream of server-sent events (SSE) related to new article create, article update, article visibility-change, article move and article delete, from all the supported projects and namespaces. The events follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/article.go) schema.
 Allows for filtering and field selection.
 Allows for parallel connection to the API.
 Allows to reconnect to the API and start consuming from a certain offset/timestamp.
@@ -8,12 +8,12 @@ The connection is long-lived. One does not have to reconnect due to the fact tha
 
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/realtime/).
 
+## Examples
 
-
-i) Connect to realtime streaming using filters and field selection. 
+Connect to realtime streaming using filters and field selection. 
 
 ```bash
-POST https://api.enterprise.wikimedia.com/v2/articles
+POST https://realtime.enterprise.wikimedia.com/v2/articles
 ```
 
 with request parameters:
@@ -124,7 +124,7 @@ offset (int): this event’s offset in the partition it belongs to.
 date_published (string date in RFC3339): timestamp when this event was published to the partition it belongs to.
 ```
 
-While consuming the articles, we record either:
+While consuming the articles, we record for each partition either:
 ```
 partition -> latest offset consumed
 partition -> latest date_published consumed
@@ -137,9 +137,9 @@ One can pass a map of partition:offset, e.g., {"0": 3614782, "4": 3593806, "8": 
 
 If the offsets contain irrelevant partitions, they will simply be ignored. For example, for the following query parameters, partition 5 will be ignored since the relevant partitions here are 0 through 4.
 
-```
+```json
 params = {
-     "parts": [0]
+     "parts": [0],
      "offsets": {"0": 3614782, "4": 3593806, "5": 3588693}
 }
 ```
@@ -150,7 +150,7 @@ The length/size of the offsets must be <= 50 (capped by the total number of part
 
 
 b) Using `since`
-If we have the record for partittion:date_published as follows:
+If we have the record for `partittion -> date_published` as follows:
 
 ```
 0 -> "2024-02-29T19:41:29.98Z"
@@ -162,7 +162,7 @@ If we have the record for partittion:date_published as follows:
 
 ```
 
-Consider that the date_published for partition 2 is the minimum. Then, we can reconnect using minimum date_published as `since` as follows. We may receive some events that we have received already before (from other partitions such as 0, 1, 3,...). This needs to be handled on the client end.
+Consider that the `date_published` for partition 2 is the minimum. Then, we can reconnect using minimum date_published as `since` as follows. Note that we may receive some events that we have received already before (from other partitions such as 0, 1, 3,...). This needs to be handled on the client end.
 
 ```json
 params = {
@@ -173,13 +173,13 @@ params = {
 c) Using `since_per_partition`
 This way of reconnection is not recommended due to performance issues. Please use a) or b) instead.
 
-As a query parameter, one can pass a map of int:string date in RFC3339. e.g, {"1": "2023-06-05T12:00:00Z", "2": "2023-06-05T12:00:00Z"}. With this example since_per_partition, the client will receive events with date_published >= time 2023-06-05T12:00:00Z from partition 1.
+As a query parameter, one can pass a map of `int:string date in RFC3339`. e.g, {"1": "2023-06-05T12:00:00Z", "2": "2023-06-05T12:00:00Z"}. With this example since_per_partition, the client will receive events with date_published >= time 2023-06-05T12:00:00Z from partition 1, and so on for other partitions.
 
 If the since_per_partition contains irrelevant partitions, they will simply be ignored. For example, for the following query parameters, partition 5 will be ignored since the relevant partitions are 0 through 4.
 
 ```json
 params = {
-       "parts": [0]
+       "parts": [0],
        "since_per_partition": {"1": "2023-06-05T12:00:00Z", "5": "2023-06-05T12:00:00Z"}
 }
 ```
