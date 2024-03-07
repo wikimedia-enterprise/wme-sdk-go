@@ -1,41 +1,9 @@
-# Structured-contents API examples
-Used to fetch pre-parsed articles in their latest revision/version from all supported projects and languages. 
-Allows filtering and field selection. Allows to limit articles when doing cross-project, cross-language lookup.
-Refer to the documentation [here](https://enterprise.wikimedia.com/docs/on-demand/#article-structured-contents-beta).
-
-
-
-ii) Get pre-parsed articles with name `Montreal` from English Wikipedia with selected fields. 
-Other example [here](./README.md)
-
-```bash
-POST https://api.enterprise.wikimedia.com/v2/structured-contents/Montreal
-```
-
-with request parameter:
-```json
-{
-    "limit": 1,
-    "filters": [
-        {
-            "field": "is_part_of.identifier",
-            "value": "enwiki"
-        }
-    ],
-    "fields": ["abstract", "article_sections", "infobox"]
-}
-```
-
-<detail>
-<summary>Response:</summary>
-
-```json
 [
     {
         "abstract": "Montreal is the second most populous city in Canada, the tenth most populous city in North America, and the most populous city in the province of Quebec. Founded in 1642 as Ville-Marie, or \"City of Mary\", it is named after Mount Royal, the triple-peaked hill around which the early city of Ville-Marie was built. The city is centred on the Island of Montreal, which obtained its name from the same origin as the city, and a few much smaller peripheral islands, the largest of which is Île Bizard. The city is 196 km (122 mi) east of the national capital, Ottawa, and 258 km (160 mi) southwest of the provincial capital, Quebec City. As of 2021, the city has a population of 1,762,949, and a metropolitan population of 4,291,732, making it the second-largest city, and second-largest metropolitan area in Canada. French is the city's official language. In 2021, 85.7% of the population of the city of Montreal considered themselves fluent in French while 90.2% could speak it in the metropolitan area. Montreal is one of the most bilingual cities in Quebec and Canada, with 58.5% of the population able to speak both English and French. Historically the commercial capital of Canada, Montreal was surpassed in population and economic strength by Toronto in the 1970s. Montreal remains an important centre of art, culture, literature, film and television, music, commerce, aerospace, transport, finance, pharmaceuticals, technology, design, education, tourism, food, fashion, video game development, and world affairs. Montreal is the location of the headquarters of the International Civil Aviation Organization, and was named a UNESCO City of Design in 2006. In 2017, Montreal was ranked the 12th-most liveable city in the world by the Economist Intelligence Unit in its annual Global Liveability Ranking, although it slipped to rank 40 in the 2021 index, primarily due to stress on the healthcare system from the COVID-19 pandemic. It is regularly ranked as a top ten city in the world to be a university student in the QS World University Rankings. Montreal has hosted multiple international conferences and events, including the 1967 International and Universal Exposition and the 1976 Summer Olympics. It is the only Canadian city to have held the Summer Olympics. In 2018, Montreal was ranked as a global city. The city hosts the Canadian Grand Prix of Formula One; the Montreal International Jazz Festival, the largest jazz festival in the world; the Just for Laughs festival, the largest comedy festival in the world; and Les Francos de Montréal, the largest French-language music festival in the world. In sports, it is home to the Montreal Canadiens of the National Hockey League, who have won the Stanley Cup more times than any other team.",
         "infobox": [
             {
-                "name": "Infobox settlement\n",
+                "name": "Infobox settlement",
                 "type": "infobox",
                 "has_parts": [
                     {
@@ -646,7 +614,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "Montreal (CA: /ˌ m ʌ n t r i ˈ ɔː l / MUN -tree-AWL; French: Montréal) is the second most populous city in Canada, the tenth most populous city in North America, and the most populous city in the province of Quebec . Founded in 1642 as Ville-Marie, or \"City of Mary\", it is named after Mount Royal, the triple-peaked hill around which the early city of Ville-Marie was built. The city is centred on the Island of Montreal, which obtained its name from the same origin as the city, and a few much smaller peripheral islands, the largest of which is Île Bizard . The city is 196 km (122 mi) east of the national capital, Ottawa, and 258 km (160 mi) southwest of the provincial capital, Quebec City .",
+                        "value": "Montreal (CA: /ˌ m ʌ n t r i ˈ ɔː l / MUN -tree-AWL; French: Montréal) is the second most populous city in Canada, the tenth most populous city in North America, and the most populous city in the province of Quebec. Founded in 1642 as Ville-Marie, or \"City of Mary\", it is named after Mount Royal, the triple-peaked hill around which the early city of Ville-Marie was built. The city is centred on the Island of Montreal, which obtained its name from the same origin as the city, and a few much smaller peripheral islands, the largest of which is Île Bizard. The city is 196 km (122 mi) east of the national capital, Ottawa, and 258 km (160 mi) southwest of the provincial capital, Quebec City.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Canadian_English",
@@ -758,7 +726,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Historically the commercial capital of Canada, Montreal was surpassed in population and economic strength by Toronto in the 1970s. Montreal remains an important centre of art, culture, literature, film and television, music, commerce, aerospace, transport, finance, pharmaceuticals, technology, design, education, tourism, food, fashion, video game development, and world affairs. Montreal is the location of the headquarters of the International Civil Aviation Organization, and was named a UNESCO City of Design in 2006. In 2017, Montreal was ranked the 12th-most liveable city in the world by the Economist Intelligence Unit in its annual Global Liveability Ranking, although it slipped to rank 40 in the 2021 index, primarily due to stress on the healthcare system from the COVID-19 pandemic . It is regularly ranked as a top ten city in the world to be a university student in the QS World University Rankings .",
+                        "value": "Historically the commercial capital of Canada, Montreal was surpassed in population and economic strength by Toronto in the 1970s. Montreal remains an important centre of art, culture, literature, film and television, music, commerce, aerospace, transport, finance, pharmaceuticals, technology, design, education, tourism, food, fashion, video game development, and world affairs. Montreal is the location of the headquarters of the International Civil Aviation Organization, and was named a UNESCO City of Design in 2006. In 2017, Montreal was ranked the 12th-most liveable city in the world by the Economist Intelligence Unit in its annual Global Liveability Ranking, although it slipped to rank 40 in the 2021 index, primarily due to stress on the healthcare system from the COVID-19 pandemic. It is regularly ranked as a top ten city in the world to be a university student in the QS World University Rankings.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Toronto",
@@ -816,7 +784,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal has hosted multiple international conferences and events, including the 1967 International and Universal Exposition and the 1976 Summer Olympics . It is the only Canadian city to have held the Summer Olympics. In 2018, Montreal was ranked as a global city . The city hosts the Canadian Grand Prix of Formula One; the Montreal International Jazz Festival, the largest jazz festival in the world; the Just for Laughs festival, the largest comedy festival in the world; and Les Francos de Montréal, the largest French-language music festival in the world. In sports, it is home to the Montreal Canadiens of the National Hockey League, who have won the Stanley Cup more times than any other team.",
+                        "value": "Montreal has hosted multiple international conferences and events, including the 1967 International and Universal Exposition and the 1976 Summer Olympics. It is the only Canadian city to have held the Summer Olympics. In 2018, Montreal was ranked as a global city. The city hosts the Canadian Grand Prix of Formula One; the Montreal International Jazz Festival, the largest jazz festival in the world; the Just for Laughs festival, the largest comedy festival in the world; and Les Francos de Montréal, the largest French-language music festival in the world. In sports, it is home to the Montreal Canadiens of the National Hockey League, who have won the Stanley Cup more times than any other team.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Expo_67",
@@ -876,7 +844,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "In the Ojibwe language, the land is called Mooniyaang which was \"the first stopping place\" in the Ojibwe migration story as related in the seven fires prophecy .",
+                        "value": "In the Ojibwe language, the land is called Mooniyaang which was \"the first stopping place\" in the Ojibwe migration story as related in the seven fires prophecy.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Ojibwe_language",
@@ -890,7 +858,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "In the Mohawk language, the land is called Tiohtià:ke . This is an abbreviation of Teionihtiohtiá:kon, which loosely translates as \"where the group divided/parted ways.\"",
+                        "value": "In the Mohawk language, the land is called Tiohtià:ke. This is an abbreviation of Teionihtiohtiá:kon, which loosely translates as \"where the group divided/parted ways.\"",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Mohawk_language",
@@ -900,7 +868,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "French settlers from La Flèche in the Loire valley first named their new town, founded in 1642, Ville Marie (\"City of Mary\"), named for the Virgin Mary .",
+                        "value": "French settlers from La Flèche in the Loire valley first named their new town, founded in 1642, Ville Marie (\"City of Mary\"), named for the Virgin Mary.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/La_Flèche",
@@ -918,7 +886,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The current form of the name, Montréal, is generally thought to be derived from Mount Royal (Mont Royal in French), the triple-peaked hill in the heart of the city. There are multiple explanations for how Mont Royal became Montréal . In 16th century French, the forms réal and royal were used interchangeably, so Montréal could simply be a variant of Mont Royal . In the second explanation, the name came from an Italian translation. Venetian geographer Giovanni Battista Ramusio used the name Monte Real to designate Mount Royal in his 1556 map of the region. However, the Commission de toponymie du Québec disputes this explanation.",
+                        "value": "The current form of the name, Montréal, is generally thought to be derived from Mount Royal (Mont Royal in French), the triple-peaked hill in the heart of the city. There are multiple explanations for how Mont Royal became Montréal. In 16th century French, the forms réal and royal were used interchangeably, so Montréal could simply be a variant of Mont Royal. In the second explanation, the name came from an Italian translation. Venetian geographer Giovanni Battista Ramusio used the name Monte Real to designate Mount Royal in his 1556 map of the region. However, the Commission de toponymie du Québec disputes this explanation.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Giovanni_Battista_Ramusio",
@@ -946,7 +914,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "Archaeological evidence in the region indicate that First Nations native people occupied the island of Montreal as early as 4,000 years ago. By the year AD 1000, they had started to cultivate maize . Within a few hundred years, they had built fortified villages. The Saint Lawrence Iroquoians, an ethnically and culturally distinct group from the Iroquois nations of the Haudenosaunee (then based in present-day New York), established the village of Hochelaga at the foot of Mount Royal two centuries before the French arrived. Archeologists have found evidence of their habitation there and at other locations in the valley since at least the 14th century.The French explorer Jacques Cartier visited Hochelaga on October 2, 1535, and estimated the population of the native people at Hochelaga to be \"over a thousand people\". Evidence of earlier occupation of the island, such as those uncovered in 1642 during the construction of Fort Ville-Marie, have effectively been removed.",
+                                "value": "Archaeological evidence in the region indicate that First Nations native people occupied the island of Montreal as early as 4,000 years ago. By the year AD 1000, they had started to cultivate maize. Within a few hundred years, they had built fortified villages. The Saint Lawrence Iroquoians, an ethnically and culturally distinct group from the Iroquois nations of the Haudenosaunee (then based in present-day New York), established the village of Hochelaga at the foot of Mount Royal two centuries before the French arrived. Archeologists have found evidence of their habitation there and at other locations in the valley since at least the 14th century.The French explorer Jacques Cartier visited Hochelaga on October 2, 1535, and estimated the population of the native people at Hochelaga to be \"over a thousand people\". Evidence of earlier occupation of the island, such as those uncovered in 1642 during the construction of Fort Ville-Marie, have effectively been removed.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Archaeological",
@@ -990,7 +958,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "In 1603, French explorer Samuel de Champlain reported that the St Lawrence Iroquoians and their settlements had disappeared altogether from the St Lawrence valley. This is believed to be due to outmigration, epidemics of European diseases, or intertribal wars. In 1611, Champlain established a fur trading post on the Island of Montreal on a site initially named La Place Royale . At the confluence of Petite Riviere and St. Lawrence River, it is where present-day Pointe-à-Callière stands. On his 1616 map, Champlain named the island Lille de Villemenon in honour of the sieur de Villemenon, a French dignitary who was seeking the viceroyship of New France. In 1639, Jérôme Le Royer de La Dauversière obtained the Seigneurial title to the Island of Montreal in the name of the Notre Dame Society of Montreal to establish a Roman Catholic mission to evangelize natives.",
+                                "value": "In 1603, French explorer Samuel de Champlain reported that the St Lawrence Iroquoians and their settlements had disappeared altogether from the St Lawrence valley. This is believed to be due to outmigration, epidemics of European diseases, or intertribal wars. In 1611, Champlain established a fur trading post on the Island of Montreal on a site initially named La Place Royale. At the confluence of Petite Riviere and St. Lawrence River, it is where present-day Pointe-à-Callière stands. On his 1616 map, Champlain named the island Lille de Villemenon in honour of the sieur de Villemenon, a French dignitary who was seeking the viceroyship of New France. In 1639, Jérôme Le Royer de La Dauversière obtained the Seigneurial title to the Island of Montreal in the name of the Notre Dame Society of Montreal to establish a Roman Catholic mission to evangelize natives.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Samuel_de_Champlain",
@@ -1032,7 +1000,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Dauversiere hired Paul Chomedey de Maisonneuve, then age 30, to lead a group of colonists to build a mission on his new seigneury. The colonists left France in 1641 for Quebec and arrived on the island the following year. On May 17, 1642, Ville-Marie was founded on the southern shore of Montreal island, with Maisonneuve as its first governor. The settlement included a chapel and a hospital, under the command of Jeanne Mance . By 1643, Ville-Marie had come under Iroquois raids. In 1652, Maisonneuve returned to France to raise 100 volunteers to bolster the colonial population. If the effort had failed, Montreal was to be abandoned and the survivors re-located downriver to Quebec City . Before these 100 arrived in the fall of 1653, the population of Montreal was barely 50 people.",
+                                "value": "Dauversiere hired Paul Chomedey de Maisonneuve, then age 30, to lead a group of colonists to build a mission on his new seigneury. The colonists left France in 1641 for Quebec and arrived on the island the following year. On May 17, 1642, Ville-Marie was founded on the southern shore of Montreal island, with Maisonneuve as its first governor. The settlement included a chapel and a hospital, under the command of Jeanne Mance. By 1643, Ville-Marie had come under Iroquois raids. In 1652, Maisonneuve returned to France to raise 100 volunteers to bolster the colonial population. If the effort had failed, Montreal was to be abandoned and the survivors re-located downriver to Quebec City. Before these 100 arrived in the fall of 1653, the population of Montreal was barely 50 people.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Jérome_le_Royer_de_la_Dauversiere",
@@ -1054,7 +1022,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "By 1685, Ville-Marie was home to some 600 colonists, most of them living in modest wooden houses. Ville-Marie became a centre for the fur trade and a base for further exploration . In 1689, the English-allied Iroquois attacked Lachine on the Island of Montreal, committing the worst massacre in the history of New France. By the early 18th century, the Sulpician Order was established there. To encourage French settlement, it wanted the Mohawk to move away from the fur trading post at Ville-Marie. It had a mission village, known as Kahnewake, south of the St Lawrence River. The fathers persuaded some Mohawk to make a new settlement at their former hunting grounds north of the Ottawa River. This became Kanesatake . In 1745, several Mohawk families moved upriver to create another settlement, known as Akwesasne . All three are now Mohawk reserves in Canada. The Canadian territory was ruled as a French colony until 1760, when Montreal fell to a British offensive during the Seven Years' War . The colony then surrendered to Great Britain.",
+                                "value": "By 1685, Ville-Marie was home to some 600 colonists, most of them living in modest wooden houses. Ville-Marie became a centre for the fur trade and a base for further exploration. In 1689, the English-allied Iroquois attacked Lachine on the Island of Montreal, committing the worst massacre in the history of New France. By the early 18th century, the Sulpician Order was established there. To encourage French settlement, it wanted the Mohawk to move away from the fur trading post at Ville-Marie. It had a mission village, known as Kahnewake, south of the St Lawrence River. The fathers persuaded some Mohawk to make a new settlement at their former hunting grounds north of the Ottawa River. This became Kanesatake. In 1745, several Mohawk families moved upriver to create another settlement, known as Akwesasne. All three are now Mohawk reserves in Canada. The Canadian territory was ruled as a French colony until 1760, when Montreal fell to a British offensive during the Seven Years' War. The colony then surrendered to Great Britain.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Fur_trade",
@@ -1106,7 +1074,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "As part of the American Revolution, the invasion of Quebec resulted after Benedict Arnold captured Fort Ticonderoga in present-day upstate New York in May 1775 as a launching point to Arnold's invasion of Quebec in September . While Arnold approached the Plains of Abraham, Montreal fell to American forces led by Richard Montgomery on November 13, 1775, after it was abandoned by Guy Carleton . After Arnold withdrew from Quebec City to Pointe-aux-Trembles on November 19, Montgomery's forces left Montreal on December 1 and arrived there on December 3 to plot to attack Quebec City, with Montgomery leaving David Wooster in charge of the city. Montgomery was killed in the failed attack and Arnold, who had taken command, sent Brigadier General Moses Hazen to inform Wooster of the defeat.",
+                                "value": "As part of the American Revolution, the invasion of Quebec resulted after Benedict Arnold captured Fort Ticonderoga in present-day upstate New York in May 1775 as a launching point to Arnold's invasion of Quebec in September. While Arnold approached the Plains of Abraham, Montreal fell to American forces led by Richard Montgomery on November 13, 1775, after it was abandoned by Guy Carleton. After Arnold withdrew from Quebec City to Pointe-aux-Trembles on November 19, Montgomery's forces left Montreal on December 1 and arrived there on December 3 to plot to attack Quebec City, with Montgomery leaving David Wooster in charge of the city. Montgomery was killed in the failed attack and Arnold, who had taken command, sent Brigadier General Moses Hazen to inform Wooster of the defeat.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/American_Revolution",
@@ -1182,7 +1150,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Forster advanced to Fort Senneville on May 23. By May 24, Arnold was entrenched in Montreal's borough of Lachine . Forster initially approached Lachine, then withdrew to Quinze-Chênes . Arnold's forces then abandoned Lachine to chase Forster. The Americans burned Senneville on May 26. After Arnold crossed the Ottawa River in pursuit of Forster, Forster's cannons repelled Arnold's forces. Forster negotiated a prisoner exchange with Henry Sherburne and Isaac Butterfield, resulting in a May 27 boating of their deputy Lieutenant Park being returned to the Americans. Arnold and Forster negotiated further and more American prisoners were returned to Arnold at Sainte-Anne-de-Bellevue, Quebec, (\"Fort Anne\") on May 30 (delayed two days by wind).",
+                                "value": "Forster advanced to Fort Senneville on May 23. By May 24, Arnold was entrenched in Montreal's borough of Lachine. Forster initially approached Lachine, then withdrew to Quinze-Chênes. Arnold's forces then abandoned Lachine to chase Forster. The Americans burned Senneville on May 26. After Arnold crossed the Ottawa River in pursuit of Forster, Forster's cannons repelled Arnold's forces. Forster negotiated a prisoner exchange with Henry Sherburne and Isaac Butterfield, resulting in a May 27 boating of their deputy Lieutenant Park being returned to the Americans. Arnold and Forster negotiated further and more American prisoners were returned to Arnold at Sainte-Anne-de-Bellevue, Quebec, (\"Fort Anne\") on May 30 (delayed two days by wind).",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Fort_Senneville",
@@ -1222,7 +1190,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "The Americans did not return British prisoners in exchange, as previously agreed, due to accusations of abuse, with Congress repudiating the agreement at the protest of George Washington. Arnold blamed Colonel Timothy Bedel for the defeat, removing him and Lieutenant Butterfield from command and sending them to Sorel for court-martial. The retreat of the American army delayed their court martial until August 1, 1776, when they were convicted and cashiered at Ticonderoga. Bedel was given a new commission by Congress in October 1777 after Arnold was assigned to defend Rhode Island in July 1777 .",
+                                "value": "The Americans did not return British prisoners in exchange, as previously agreed, due to accusations of abuse, with Congress repudiating the agreement at the protest of George Washington. Arnold blamed Colonel Timothy Bedel for the defeat, removing him and Lieutenant Butterfield from command and sending them to Sorel for court-martial. The retreat of the American army delayed their court martial until August 1, 1776, when they were convicted and cashiered at Ticonderoga. Bedel was given a new commission by Congress in October 1777 after Arnold was assigned to defend Rhode Island in July 1777.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Cashiered",
@@ -1264,7 +1232,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "In the 19th century, maintaining Montreal's drinking water became increasingly difficult with the rapid increase in population. A majority of the drinking water was still coming from the city's harbour, which was busy and heavily trafficked, leading to the deterioration of the water within. In the mid-1840s, the City of Montreal installed a water system that would pump water from the St. Lawrence and into cisterns . The cisterns would then be transported to the desired location. This was not the first water system of its type in Montreal, as there had been one in private ownership since 1801. In the middle of the 19th century, water distribution was carried out by \"fontainiers\". The fountainiers would open and close water valves outside of buildings, as directed, all over the city. As they lacked modern plumbing systems it was impossible to connect all buildings at once and it also acted as a conservation method. However, the population was not finished rising — it rose from 58,000 in 1852 to 267,000 by 1901.",
+                                "value": "In the 19th century, maintaining Montreal's drinking water became increasingly difficult with the rapid increase in population. A majority of the drinking water was still coming from the city's harbour, which was busy and heavily trafficked, leading to the deterioration of the water within. In the mid-1840s, the City of Montreal installed a water system that would pump water from the St. Lawrence and into cisterns. The cisterns would then be transported to the desired location. This was not the first water system of its type in Montreal, as there had been one in private ownership since 1801. In the middle of the 19th century, water distribution was carried out by \"fontainiers\". The fountainiers would open and close water valves outside of buildings, as directed, all over the city. As they lacked modern plumbing systems it was impossible to connect all buildings at once and it also acted as a conservation method. However, the population was not finished rising — it rose from 58,000 in 1852 to 267,000 by 1901.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Cistern",
@@ -1274,7 +1242,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Montreal was the capital of the Province of Canada from 1844 to 1849, but lost its status when a Tory mob burnt down the Parliament building to protest the passage of the Rebellion Losses Bill . Thereafter, the capital rotated between Quebec City and Toronto until in 1857, Queen Victoria herself established Ottawa as the capital due to strategic reasons. The reasons were twofold. First, because it was located more in the interior of the Province of Canada, it was less susceptible to attack from the United States. Second, and perhaps more importantly, because it lay on the border between French and English Canada, Ottawa was seen as a compromise between Montreal, Toronto, Kingston and Quebec City, which were all vying to become the young nation's official capital. Ottawa retained the status as capital of Canada when the Province of Canada joined with Nova Scotia and New Brunswick to form the Dominion of Canada in 1867.",
+                                "value": "Montreal was the capital of the Province of Canada from 1844 to 1849, but lost its status when a Tory mob burnt down the Parliament building to protest the passage of the Rebellion Losses Bill. Thereafter, the capital rotated between Quebec City and Toronto until in 1857, Queen Victoria herself established Ottawa as the capital due to strategic reasons. The reasons were twofold. First, because it was located more in the interior of the Province of Canada, it was less susceptible to attack from the United States. Second, and perhaps more importantly, because it lay on the border between French and English Canada, Ottawa was seen as a compromise between Montreal, Toronto, Kingston and Quebec City, which were all vying to become the young nation's official capital. Ottawa retained the status as capital of Canada when the Province of Canada joined with Nova Scotia and New Brunswick to form the Dominion of Canada in 1867.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Province_of_Canada",
@@ -1330,7 +1298,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "After World War I, the prohibition movement in the United States led to Montreal becoming a destination for Americans looking for alcohol . Unemployment remained high in the city and was exacerbated by the Stock Market Crash of 1929 and the Great Depression .",
+                                "value": "After World War I, the prohibition movement in the United States led to Montreal becoming a destination for Americans looking for alcohol. Unemployment remained high in the city and was exacerbated by the Stock Market Crash of 1929 and the Great Depression.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/World_War_I",
@@ -1356,7 +1324,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "During World War II, Mayor Camillien Houde protested against conscription and urged Montrealers to disobey the federal government's registry of all men and women. The federal government, part of the Allied forces, was furious over Houde's stand and held him in a prison camp until 1944. That year, the government decided to institute conscription to expand the armed forces and fight the Axis powers . (See Conscription Crisis of 1944 .)",
+                                "value": "During World War II, Mayor Camillien Houde protested against conscription and urged Montrealers to disobey the federal government's registry of all men and women. The federal government, part of the Allied forces, was furious over Houde's stand and held him in a prison camp until 1944. That year, the government decided to institute conscription to expand the armed forces and fight the Axis powers. (See Conscription Crisis of 1944.)",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/World_War_II",
@@ -1392,7 +1360,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "By 1951, Montreal's population had surpassed one million. However, Toronto's growth had begun challenging Montreal's status as the economic capital of Canada. Indeed, the volume of stocks traded at the Toronto Stock Exchange had already surpassed that traded at the Montreal Stock Exchange in the 1940s. The Saint Lawrence Seaway opened in 1959, allowing vessels to bypass Montreal. In time, this development led to the end of the city's economic dominance as businesses moved to other areas. During the 1960s, there was continued growth as Canada's tallest skyscrapers, new expressways and the subway system known as the Montreal Metro were finished during this time. Montreal also held the World's Fair of 1967, better known as Expo67 .",
+                                "value": "By 1951, Montreal's population had surpassed one million. However, Toronto's growth had begun challenging Montreal's status as the economic capital of Canada. Indeed, the volume of stocks traded at the Toronto Stock Exchange had already surpassed that traded at the Montreal Stock Exchange in the 1940s. The Saint Lawrence Seaway opened in 1959, allowing vessels to bypass Montreal. In time, this development led to the end of the city's economic dominance as businesses moved to other areas. During the 1960s, there was continued growth as Canada's tallest skyscrapers, new expressways and the subway system known as the Montreal Metro were finished during this time. Montreal also held the World's Fair of 1967, better known as Expo67.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Toronto_Stock_Exchange",
@@ -1418,7 +1386,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "The 1970s ushered in a period of wide-ranging social and political changes, stemming largely from the concerns of the French-speaking majority about the conservation of their culture and language, given the traditional predominance of the English Canadian minority in the business arena. The October Crisis and the 1976 election of the Parti Québécois, which supported sovereign status for Quebec, resulted in the departure of many businesses and people from the city. In 1976, Montreal hosted the Summer Olympics . While the event brought the city international prestige and attention, the Olympic Stadium built for the event resulted in massive debt for the city. During the 1980s and early 1990s, Montreal experienced a slower rate of economic growth than many other major Canadian cities. Montreal was the site of the 1989 École Polytechnique massacre, one of Canada's worst mass shootings, where 25-year-old Marc Lépine shot and killed 14 people, all of them women, and wounded 14 other people before shooting himself at École Polytechnique .",
+                                "value": "The 1970s ushered in a period of wide-ranging social and political changes, stemming largely from the concerns of the French-speaking majority about the conservation of their culture and language, given the traditional predominance of the English Canadian minority in the business arena. The October Crisis and the 1976 election of the Parti Québécois, which supported sovereign status for Quebec, resulted in the departure of many businesses and people from the city. In 1976, Montreal hosted the Summer Olympics. While the event brought the city international prestige and attention, the Olympic Stadium built for the event resulted in massive debt for the city. During the 1980s and early 1990s, Montreal experienced a slower rate of economic growth than many other major Canadian cities. Montreal was the site of the 1989 École Polytechnique massacre, one of Canada's worst mass shootings, where 25-year-old Marc Lépine shot and killed 14 people, all of them women, and wounded 14 other people before shooting himself at École Polytechnique.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/French_Canadians",
@@ -1536,7 +1504,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "Montreal is in the southwest of the province of Quebec. The city covers most of the Island of Montreal at the confluence of the Saint Lawrence and Ottawa Rivers. The port of Montreal lies at one end of the Saint Lawrence Seaway, the river gateway that stretches from the Great Lakes to the Atlantic. Montreal is defined by its location between the Saint Lawrence river to its south and the Rivière des Prairies to its north. The city is named after the most prominent geographical feature on the island, a three-head hill called Mount Royal, topped at 232 m (761 ft) above sea level .",
+                        "value": "Montreal is in the southwest of the province of Quebec. The city covers most of the Island of Montreal at the confluence of the Saint Lawrence and Ottawa Rivers. The port of Montreal lies at one end of the Saint Lawrence Seaway, the river gateway that stretches from the Great Lakes to the Atlantic. Montreal is defined by its location between the Saint Lawrence river to its south and the Rivière des Prairies to its north. The city is named after the most prominent geographical feature on the island, a three-head hill called Mount Royal, topped at 232 m (761 ft) above sea level.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Great_Lakes",
@@ -1658,7 +1626,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "The lowest temperature in Environment Canada's books was −37.8 °C (−36 °F) on January 15, 1957, and the highest temperature was 37.6 °C (99.7 °F) on August 1, 1975, both at Dorval International Airport .",
+                                "value": "The lowest temperature in Environment Canada's books was −37.8 °C (−36 °F) on January 15, 1957, and the highest temperature was 37.6 °C (99.7 °F) on August 1, 1975, both at Dorval International Airport.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Montréal–Pierre_Elliott_Trudeau_International_Airport",
@@ -1668,7 +1636,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Before modern weather record keeping (which dates back to 1871 for McGill), a minimum temperature almost 5 degrees lower was recorded at 7 a.m. on January 10, 1859, where it registered at −42 °C (−44 °F) ."
+                                "value": "Before modern weather record keeping (which dates back to 1871 for McGill), a minimum temperature almost 5 degrees lower was recorded at 7 a.m. on January 10, 1859, where it registered at −42 °C (−44 °F)."
                             },
                             {
                                 "type": "paragraph",
@@ -1762,7 +1730,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The Montreal Metro has public artwork by some of the biggest names in Quebec culture .",
+                        "value": "The Montreal Metro has public artwork by some of the biggest names in Quebec culture.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Culture_of_Quebec",
@@ -1892,7 +1860,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Many of these boroughs were independent cities that were forced to merge with Montreal in January 2002 following the 2002 municipal reorganization of Montreal .",
+                        "value": "Many of these boroughs were independent cities that were forced to merge with Montreal in January 2002 following the 2002 municipal reorganization of Montreal.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/2002-2006_municipal_reorganization_of_Montreal",
@@ -1902,7 +1870,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The borough with the most neighbourhoods is Ville Marie, which includes downtown, the historical district of Old Montreal, Chinatown, the Gay Village, the Latin Quarter, the gentrified Quartier international and Cité Multimédia as well as the Quartier des Spectacles which is under development. Other neighbourhoods of interest in the borough include the affluent Golden Square Mile neighbourhood at the foot of Mount Royal and the Shaughnessy Village /Concordia U area home to thousands of students at Concordia University . The borough also comprises most of Mount Royal Park, Saint Helen's Island, and Notre-Dame Island .",
+                        "value": "The borough with the most neighbourhoods is Ville Marie, which includes downtown, the historical district of Old Montreal, Chinatown, the Gay Village, the Latin Quarter, the gentrified Quartier international and Cité Multimédia as well as the Quartier des Spectacles which is under development. Other neighbourhoods of interest in the borough include the affluent Golden Square Mile neighbourhood at the foot of Mount Royal and the Shaughnessy Village /Concordia U area home to thousands of students at Concordia University. The borough also comprises most of Mount Royal Park, Saint Helen's Island, and Notre-Dame Island.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Chinatown_(Montreal)",
@@ -1952,7 +1920,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The Plateau Mount Royal borough was a working class francophone area. The largest neighbourhood is the Plateau (not to be confused with the whole borough), which is undergoing considerable gentrification, and a 2001 study deemed it as Canada's most creative neighbourhood because artists comprise 8% of its labour force. The neighbourhood of Mile End in the northwestern part of the borough has been a very multicultural area of the city, and features two of Montreal's well-known bagel establishments, St-Viateur Bagel and Fairmount Bagel . The McGill Ghetto is in the extreme southwestern portion of the borough, its name being derived from the fact that it is home to thousands of McGill University students and faculty members.",
+                        "value": "The Plateau Mount Royal borough was a working class francophone area. The largest neighbourhood is the Plateau (not to be confused with the whole borough), which is undergoing considerable gentrification, and a 2001 study deemed it as Canada's most creative neighbourhood because artists comprise 8% of its labour force. The neighbourhood of Mile End in the northwestern part of the borough has been a very multicultural area of the city, and features two of Montreal's well-known bagel establishments, St-Viateur Bagel and Fairmount Bagel. The McGill Ghetto is in the extreme southwestern portion of the borough, its name being derived from the fact that it is home to thousands of McGill University students and faculty members.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Plateau",
@@ -1990,7 +1958,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The South West borough was home to much of the city's industry during the late 19th and early-to-mid 20th century. The borough included Goose Village and was historically home to the traditionally working-class Irish neighbourhoods of Griffintown and Point Saint Charles as well as the low-income neighbourhoods of Saint Henri and Little Burgundy .",
+                        "value": "The South West borough was home to much of the city's industry during the late 19th and early-to-mid 20th century. The borough included Goose Village and was historically home to the traditionally working-class Irish neighbourhoods of Griffintown and Point Saint Charles as well as the low-income neighbourhoods of Saint Henri and Little Burgundy.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Goose_Village,_Montreal",
@@ -2046,7 +2014,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "Old Montreal is a historic area southeast of downtown containing many attractions such as the Old Port of Montreal, Place Jacques-Cartier, Montreal City Hall, the Bonsecours Market, Place d'Armes, Pointe-à-Callière Museum, the Notre-Dame de Montréal Basilica, and the Montreal Science Centre .",
+                                "value": "Old Montreal is a historic area southeast of downtown containing many attractions such as the Old Port of Montreal, Place Jacques-Cartier, Montreal City Hall, the Bonsecours Market, Place d'Armes, Pointe-à-Callière Museum, the Notre-Dame de Montréal Basilica, and the Montreal Science Centre.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Old_Port_of_Montreal",
@@ -2086,7 +2054,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "The riverside area adjacent to Old Montreal is known as the Old Port. The Old Port was the site of the Port of Montreal, but its shipping operations have been moved to a larger site downstream, leaving the former location as a recreational and historical area maintained by Parks Canada . The new Port of Montreal is Canada's largest container port and the largest inland port on Earth.",
+                                "value": "The riverside area adjacent to Old Montreal is known as the Old Port. The Old Port was the site of the Port of Montreal, but its shipping operations have been moved to a larger site downstream, leaving the former location as a recreational and historical area maintained by Parks Canada. The new Port of Montreal is Canada's largest container port and the largest inland port on Earth.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Port_of_Montreal",
@@ -2106,7 +2074,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "The mountain is the site of Mount Royal Park, one of Montreal's largest greenspaces . The park, most of which is wooded, was designed by Frederick Law Olmsted, who also designed New York's Central Park, and was inaugurated in 1876.",
+                                "value": "The mountain is the site of Mount Royal Park, one of Montreal's largest greenspaces. The park, most of which is wooded, was designed by Frederick Law Olmsted, who also designed New York's Central Park, and was inaugurated in 1876.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Open_space_reserve",
@@ -2124,7 +2092,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "The park contains two belvederes, the more prominent of which is the Kondiaronk Belvedere, a semicircular plaza with a chalet overlooking Downtown Montreal. Other features of the park are Beaver Lake, a small man-made lake, a short ski slope, a sculpture garden, Smith House, an interpretive centre, and a well-known monument to Sir George-Étienne Cartier . The park hosts athletic, tourist and cultural activities.",
+                                "value": "The park contains two belvederes, the more prominent of which is the Kondiaronk Belvedere, a semicircular plaza with a chalet overlooking Downtown Montreal. Other features of the park are Beaver Lake, a small man-made lake, a short ski slope, a sculpture garden, Smith House, an interpretive centre, and a well-known monument to Sir George-Étienne Cartier. The park hosts athletic, tourist and cultural activities.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Belvedere_(structure)",
@@ -2172,7 +2140,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Mount Royal Cemetery contains more than 162,000 graves and is the final resting place for a number of notable Canadians. It includes a veterans section with several soldiers who were awarded the British Empire 's highest military honour, the Victoria Cross . In 1901, the Mount Royal Cemetery Company established the first crematorium in Canada.",
+                                "value": "Mount Royal Cemetery contains more than 162,000 graves and is the final resting place for a number of notable Canadians. It includes a veterans section with several soldiers who were awarded the British Empire 's highest military honour, the Victoria Cross. In 1901, the Mount Royal Cemetery Company established the first crematorium in Canada.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/British_Empire",
@@ -2220,7 +2188,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "In the 2021 Census of Population conducted by Statistics Canada, Montréal had a population of 1,762,949 living in 816,338 of its 878,542 total private dwellings, a change of 3.4% from its 2016 population of 1,704,694 . With a land area of 364.74 km (140.83 sq mi), it had a population density of 4,833.4/km (12,518.6/sq mi) in 2021.",
+                        "value": "In the 2021 Census of Population conducted by Statistics Canada, Montréal had a population of 1,762,949 living in 816,338 of its 878,542 total private dwellings, a change of 3.4% from its 2016 population of 1,704,694. With a land area of 364.74 km (140.83 sq mi), it had a population density of 4,833.4/km (12,518.6/sq mi) in 2021.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/2021_Canadian_census",
@@ -2340,7 +2308,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Visible minorities comprised 38.8% of the city of Montreal population in the 2021 census . The five most numerous visible minorities are Black Canadians (11.5%), Arab Canadians (8.2%), South Asian Canadians (4.6%), Latin Americans (4.5%), and Chinese Canadians (3.3%). Furthermore, some 27.2% of the population Greater Montreal are members of a visible minority group as of 2021, up from 5.2% in 1981. Visible minorities are defined by the Canadian Employment Equity Act as \"persons, other than Aboriginals, who are non-white in colour\".",
+                                "value": "Visible minorities comprised 38.8% of the city of Montreal population in the 2021 census. The five most numerous visible minorities are Black Canadians (11.5%), Arab Canadians (8.2%), South Asian Canadians (4.6%), Latin Americans (4.5%), and Chinese Canadians (3.3%). Furthermore, some 27.2% of the population Greater Montreal are members of a visible minority group as of 2021, up from 5.2% in 1981. Visible minorities are defined by the Canadian Employment Equity Act as \"persons, other than Aboriginals, who are non-white in colour\".",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Visible_minorities",
@@ -2492,7 +2460,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "The Greater Montreal Area is predominantly Catholic; however, weekly church attendance in Quebec was among the lowest in Canada in 1998. Historically Montreal has been a centre of Catholicism in North America with its numerous seminaries and churches, including the Notre-Dame Basilica, the Cathédrale Marie-Reine-du-Monde, and Saint Joseph's Oratory .",
+                                "value": "The Greater Montreal Area is predominantly Catholic; however, weekly church attendance in Quebec was among the lowest in Canada in 1998. Historically Montreal has been a centre of Catholicism in North America with its numerous seminaries and churches, including the Notre-Dame Basilica, the Cathédrale Marie-Reine-du-Monde, and Saint Joseph's Oratory.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Catholic_Church",
@@ -2562,7 +2530,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "Montreal has the second-largest economy of Canadian cities based on GDP and the largest in Quebec. In 2019, Metropolitan Montreal was responsible for CA$234.0 billion of Quebec's CA$425.3 billion GDP. The city is today an important centre of commerce, finance, industry, technology, culture, world affairs and is the headquarters of the Montreal Exchange . In recent decades, the city was widely seen as weaker than that of Toronto and other major Canadian cities, but it has recently experienced a revival.",
+                        "value": "Montreal has the second-largest economy of Canadian cities based on GDP and the largest in Quebec. In 2019, Metropolitan Montreal was responsible for CA$234.0 billion of Quebec's CA$425.3 billion GDP. The city is today an important centre of commerce, finance, industry, technology, culture, world affairs and is the headquarters of the Montreal Exchange. In recent decades, the city was widely seen as weaker than that of Toronto and other major Canadian cities, but it has recently experienced a revival.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Montreal_Exchange",
@@ -2656,7 +2624,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal is a centre of film and television production. The headquarters of Alliance Films and five studios of the Academy Award -winning National Film Board of Canada are in the city, as well as the head offices of Telefilm Canada, the national feature-length film and television funding agency and Télévision de Radio-Canada . Given its eclectic architecture and broad availability of film services and crew members, Montreal is a popular filming location for feature-length films, and sometimes stands in for European locations. The city is also home to many recognized cultural, film, and music festivals (Just For Laughs, Just For Laughs Gags, Montreal International Jazz Festival, and others), which contribute significantly to its economy. It is also home to one of the world's largest cultural enterprises, the Cirque du Soleil .",
+                        "value": "Montreal is a centre of film and television production. The headquarters of Alliance Films and five studios of the Academy Award -winning National Film Board of Canada are in the city, as well as the head offices of Telefilm Canada, the national feature-length film and television funding agency and Télévision de Radio-Canada. Given its eclectic architecture and broad availability of film services and crew members, Montreal is a popular filming location for feature-length films, and sometimes stands in for European locations. The city is also home to many recognized cultural, film, and music festivals (Just For Laughs, Just For Laughs Gags, Montreal International Jazz Festival, and others), which contribute significantly to its economy. It is also home to one of the world's largest cultural enterprises, the Cirque du Soleil.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Alliance_Films",
@@ -2736,7 +2704,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The video game industry has been booming in Montreal since November 2, 1995, coinciding with the opening of Ubisoft Montreal . Recently, the city has attracted world leading game developers and publishers studios such as EA, Eidos Interactive, BioWare, Artificial Mind and Movement, Strategy First, THQ, Gameloft mainly because of the quality of local specialized labour, and tax credits offered to the corporations. In 2010, Warner Bros. Interactive Entertainment, a division of Warner Bros., announced that it would open a video game studio. Relatively new to the video game industry, it will be Warner Bros. first studio opened, not purchased, and will develop games for such Warner Bros. franchises as Batman and other games from their DC Comics portfolio. The studio will create 300 jobs.",
+                        "value": "The video game industry has been booming in Montreal since November 2, 1995, coinciding with the opening of Ubisoft Montreal. Recently, the city has attracted world leading game developers and publishers studios such as EA, Eidos Interactive, BioWare, Artificial Mind and Movement, Strategy First, THQ, Gameloft mainly because of the quality of local specialized labour, and tax credits offered to the corporations. In 2010, Warner Bros. Interactive Entertainment, a division of Warner Bros., announced that it would open a video game studio. Relatively new to the video game industry, it will be Warner Bros. first studio opened, not purchased, and will develop games for such Warner Bros. franchises as Batman and other games from their DC Comics portfolio. The studio will create 300 jobs.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Ubisoft_Montreal",
@@ -2790,7 +2758,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal plays an important role in the finance industry. The sector employs approximately 100,000 people in the Greater Montreal Area. As of March 2018, Montreal is ranked in the 12th position in the Global Financial Centres Index, a ranking of the competitiveness of financial centres around the world. The city is home to the Montreal Exchange, the oldest stock exchange in Canada and the only financial derivatives exchange in the country. The corporate headquarters of the Bank of Montreal and Royal Bank of Canada, two of the biggest banks in Canada, were in Montreal. While both banks moved their headquarters to Toronto, Ontario, their legal corporate offices remain in Montreal. The city is home to head offices of two smaller banks, National Bank of Canada and Laurentian Bank of Canada . The Caisse de dépôt et placement du Québec, an institutional investor managing assets totalling $408 billion CAD, has its main business office in Montreal. Many foreign subsidiaries operating in the financial sector also have offices in Montreal, including HSBC, Aon, Société Générale, BNP Paribas and AXA .",
+                        "value": "Montreal plays an important role in the finance industry. The sector employs approximately 100,000 people in the Greater Montreal Area. As of March 2018, Montreal is ranked in the 12th position in the Global Financial Centres Index, a ranking of the competitiveness of financial centres around the world. The city is home to the Montreal Exchange, the oldest stock exchange in Canada and the only financial derivatives exchange in the country. The corporate headquarters of the Bank of Montreal and Royal Bank of Canada, two of the biggest banks in Canada, were in Montreal. While both banks moved their headquarters to Toronto, Ontario, their legal corporate offices remain in Montreal. The city is home to head offices of two smaller banks, National Bank of Canada and Laurentian Bank of Canada. The Caisse de dépôt et placement du Québec, an institutional investor managing assets totalling $408 billion CAD, has its main business office in Montreal. Many foreign subsidiaries operating in the financial sector also have offices in Montreal, including HSBC, Aon, Société Générale, BNP Paribas and AXA.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Global_Financial_Centres_Index",
@@ -2852,7 +2820,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Several companies are headquartered in Greater Montreal Area including Rio Tinto Alcan, Bombardier Inc., Canadian National Railway, CGI Group, Air Canada, Air Transat, CAE, Saputo, Cirque du Soleil, Stingray Group, Quebecor, Ultramar, Kruger Inc., Jean Coutu Group, Uniprix, Proxim, Domtar, Le Château, Power Corporation, Cellcom Communications, Bell Canada . Standard Life, Hydro-Québec, AbitibiBowater, Pratt and Whitney Canada, Molson, Tembec, Canada Steamship Lines, Fednav, Alimentation Couche-Tard, SNC-Lavalin, MEGA Brands, Aeroplan, Agropur, Metro Inc., Laurentian Bank of Canada, National Bank of Canada, Transat A.T., Via Rail, GardaWorld, Novacam Technologies, SOLABS, Dollarama, Rona and the Caisse de dépôt et placement du Québec .",
+                        "value": "Several companies are headquartered in Greater Montreal Area including Rio Tinto Alcan, Bombardier Inc., Canadian National Railway, CGI Group, Air Canada, Air Transat, CAE, Saputo, Cirque du Soleil, Stingray Group, Quebecor, Ultramar, Kruger Inc., Jean Coutu Group, Uniprix, Proxim, Domtar, Le Château, Power Corporation, Cellcom Communications, Bell Canada. Standard Life, Hydro-Québec, AbitibiBowater, Pratt and Whitney Canada, Molson, Tembec, Canada Steamship Lines, Fednav, Alimentation Couche-Tard, SNC-Lavalin, MEGA Brands, Aeroplan, Agropur, Metro Inc., Laurentian Bank of Canada, National Bank of Canada, Transat A.T., Via Rail, GardaWorld, Novacam Technologies, SOLABS, Dollarama, Rona and the Caisse de dépôt et placement du Québec.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Rio_Tinto_Alcan",
@@ -3070,7 +3038,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "Montreal was referred to as \"Canada's Cultural Capital\" by Monocle magazine . The city is Canada's centre for French-language television productions, radio, theatre, film, multimedia, and print publishing. Montreal's many cultural communities have given it a distinct local culture. Montreal was designated as the World Book Capital for the year 2005 by UNESCO .",
+                        "value": "Montreal was referred to as \"Canada's Cultural Capital\" by Monocle magazine. The city is Canada's centre for French-language television productions, radio, theatre, film, multimedia, and print publishing. Montreal's many cultural communities have given it a distinct local culture. Montreal was designated as the World Book Capital for the year 2005 by UNESCO.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Monocle_(2007_magazine)",
@@ -3146,7 +3114,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "A cultural heart of classical art and the venue for many summer festivals, the Place des Arts is a complex of different concert and theatre halls surrounding a large square in the eastern portion of downtown. Place des Arts has the headquarters of one of the world's foremost orchestras, the Montreal Symphony Orchestra . The Orchestre Métropolitain du Grand Montréal and the chamber orchestra I Musici de Montréal are two other well-regarded Montreal orchestras. Also performing at Place des Arts are the Opéra de Montréal and the city's chief ballet company Les Grands Ballets Canadiens . Internationally recognized avant-garde dance troupes such as Compagnie Marie Chouinard, La La La Human Steps, O Vertigo, and the Fondation Jean-Pierre Perreault have toured the world and worked with international popular artists on videos and concerts. The unique choreography of these troupes has paved the way for the success of the world-renowned Cirque du Soleil.",
+                        "value": "A cultural heart of classical art and the venue for many summer festivals, the Place des Arts is a complex of different concert and theatre halls surrounding a large square in the eastern portion of downtown. Place des Arts has the headquarters of one of the world's foremost orchestras, the Montreal Symphony Orchestra. The Orchestre Métropolitain du Grand Montréal and the chamber orchestra I Musici de Montréal are two other well-regarded Montreal orchestras. Also performing at Place des Arts are the Opéra de Montréal and the city's chief ballet company Les Grands Ballets Canadiens. Internationally recognized avant-garde dance troupes such as Compagnie Marie Chouinard, La La La Human Steps, O Vertigo, and the Fondation Jean-Pierre Perreault have toured the world and worked with international popular artists on videos and concerts. The unique choreography of these troupes has paved the way for the success of the world-renowned Cirque du Soleil.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Place_des_Arts",
@@ -3196,7 +3164,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Nicknamed la ville aux cent clochers (the city of a hundred steeples), Montreal is renowned for its churches. There are an estimated 650 churches on the island, with 450 of them dating back to the 1800s or earlier. Mark Twain noted, \"This is the first time I was ever in a city where you couldn't throw a brick without breaking a church window.\" The city has four Roman Catholic basilicas: Mary, Queen of the World Cathedral, Notre-Dame Basilica, St Patrick's Basilica, and Saint Joseph's Oratory . The Oratory is the largest church in Canada, with the second largest copper dome in the world, after Saint Peter's Basilica in Rome.",
+                        "value": "Nicknamed la ville aux cent clochers (the city of a hundred steeples), Montreal is renowned for its churches. There are an estimated 650 churches on the island, with 450 of them dating back to the 1800s or earlier. Mark Twain noted, \"This is the first time I was ever in a city where you couldn't throw a brick without breaking a church window.\" The city has four Roman Catholic basilicas: Mary, Queen of the World Cathedral, Notre-Dame Basilica, St Patrick's Basilica, and Saint Joseph's Oratory. The Oratory is the largest church in Canada, with the second largest copper dome in the world, after Saint Peter's Basilica in Rome.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Mark_Twain",
@@ -3230,7 +3198,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Beginning in the 1940s, Quebec literature began to shift from pastoral tales romanticising the French-Canadian countryside to writing set in the multicultural city of Montreal. Notable pioneering works describing the character of the city include Gabrielle Roy 's 1945 novel Bonheur D'Occasion, translated as The Tin Flute, and Gwethalyn Graham 's 1944 novel Earth and High Heaven . Subsequent writers of fiction who have set their work in Montreal have included Mordecai Richler, Claude Jasmin, Francine Noel, and Heather O'Neill, among many others .",
+                        "value": "Beginning in the 1940s, Quebec literature began to shift from pastoral tales romanticising the French-Canadian countryside to writing set in the multicultural city of Montreal. Notable pioneering works describing the character of the city include Gabrielle Roy 's 1945 novel Bonheur D'Occasion, translated as The Tin Flute, and Gwethalyn Graham 's 1944 novel Earth and High Heaven. Subsequent writers of fiction who have set their work in Montreal have included Mordecai Richler, Claude Jasmin, Francine Noel, and Heather O'Neill, among many others.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/French_Canadians",
@@ -3278,7 +3246,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "The most popular sport is ice hockey . The professional hockey team, the Montreal Canadiens, is one of the Original Six teams of the National Hockey League (NHL), and has won an NHL-record 24 Stanley Cup championships. The Canadiens' most recent Stanley Cup victory came in 1993 . They have major rivalries with the Toronto Maple Leafs and Boston Bruins, both of which are also Original Six teams, and with the Ottawa Senators, the closest team geographically. The Canadiens have played at the Bell Centre since 1996. Prior to that they played at the Montreal Forum .",
+                        "value": "The most popular sport is ice hockey. The professional hockey team, the Montreal Canadiens, is one of the Original Six teams of the National Hockey League (NHL), and has won an NHL-record 24 Stanley Cup championships. The Canadiens' most recent Stanley Cup victory came in 1993. They have major rivalries with the Toronto Maple Leafs and Boston Bruins, both of which are also Original Six teams, and with the Ottawa Senators, the closest team geographically. The Canadiens have played at the Bell Centre since 1996. Prior to that they played at the Montreal Forum.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Ice_hockey",
@@ -3328,7 +3296,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The Montreal Alouettes of the Canadian Football League (CFL) play at Percival Molson Memorial Stadium on the campus of McGill University for their regular-season games. Late season and playoff games are sometimes played at the much larger, enclosed Olympic Stadium, which also hosted the 2008 Grey Cup . The Alouettes have won the Grey Cup eight times, most recently in 2023 . The Alouettes have had two periods on hiatus. During the second one, the Montreal Machine played in the World League of American Football in 1991 and 1992. The McGill Redbirds, Concordia Stingers, and Université de Montréal Carabins play in the U Sports football league.",
+                        "value": "The Montreal Alouettes of the Canadian Football League (CFL) play at Percival Molson Memorial Stadium on the campus of McGill University for their regular-season games. Late season and playoff games are sometimes played at the much larger, enclosed Olympic Stadium, which also hosted the 2008 Grey Cup. The Alouettes have won the Grey Cup eight times, most recently in 2023. The Alouettes have had two periods on hiatus. During the second one, the Montreal Machine played in the World League of American Football in 1991 and 1992. The McGill Redbirds, Concordia Stingers, and Université de Montréal Carabins play in the U Sports football league.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Montreal_Alouettes",
@@ -3382,7 +3350,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal has a storied baseball history. The city was the home of the minor-league Montreal Royals of the International League until 1960. In 1946, Jackie Robinson broke the Baseball colour line with the Royals in an emotionally difficult year; Robinson was forever grateful for the local fans' fervent support. Major League Baseball came to town in the form of the Montreal Expos in 1969. They played their games at Jarry Park Stadium until moving into Olympic Stadium in 1977. After 36 years in Montreal, the team relocated to Washington, D.C., in 2005 and re-branded themselves as the Washington Nationals .",
+                        "value": "Montreal has a storied baseball history. The city was the home of the minor-league Montreal Royals of the International League until 1960. In 1946, Jackie Robinson broke the Baseball colour line with the Royals in an emotionally difficult year; Robinson was forever grateful for the local fans' fervent support. Major League Baseball came to town in the form of the Montreal Expos in 1969. They played their games at Jarry Park Stadium until moving into Olympic Stadium in 1977. After 36 years in Montreal, the team relocated to Washington, D.C., in 2005 and re-branded themselves as the Washington Nationals.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Montreal_Royals",
@@ -3420,7 +3388,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "CF Montréal (formerly known as the Montreal Impact) are the city's professional soccer team. They play at a soccer-specific stadium called Saputo Stadium . They joined North America's biggest soccer league, Major League Soccer, in 2012. The Montreal games of the 2007 FIFA U-20 World Cup and 2014 FIFA U-20 Women's World Cup were held at Olympic Stadium, and the venue hosted Montreal games in the 2015 FIFA Women's World Cup .",
+                        "value": "CF Montréal (formerly known as the Montreal Impact) are the city's professional soccer team. They play at a soccer-specific stadium called Saputo Stadium. They joined North America's biggest soccer league, Major League Soccer, in 2012. The Montreal games of the 2007 FIFA U-20 World Cup and 2014 FIFA U-20 Women's World Cup were held at Olympic Stadium, and the venue hosted Montreal games in the 2015 FIFA Women's World Cup.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/CF_Montréal",
@@ -3454,7 +3422,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal is the site of a high-profile auto racing event each year: the Canadian Grand Prix of Formula One (F1) racing. This race takes place on the Circuit Gilles Villeneuve on Île Notre-Dame. In 2009, the race was dropped from the Formula One calendar, to the chagrin of some fans, but the Canadian Grand Prix returned to the Formula One calendar in 2010. It was dropped from the calendar again in 2020 and 2021, due to COVID-19 pandemic, but racing resumed in 2022, with the 2022 Canadian Grand Prix . The Circuit Gilles Villeneuve also hosted a round of the Champ Car World Series from 2002 to 2007, and was home to the NAPA Auto Parts 200, a NASCAR Nationwide Series race, and the Montréal 200, a Grand Am Rolex Sports Car Series race.",
+                        "value": "Montreal is the site of a high-profile auto racing event each year: the Canadian Grand Prix of Formula One (F1) racing. This race takes place on the Circuit Gilles Villeneuve on Île Notre-Dame. In 2009, the race was dropped from the Formula One calendar, to the chagrin of some fans, but the Canadian Grand Prix returned to the Formula One calendar in 2010. It was dropped from the calendar again in 2020 and 2021, due to COVID-19 pandemic, but racing resumed in 2022, with the 2022 Canadian Grand Prix. The Circuit Gilles Villeneuve also hosted a round of the Champ Car World Series from 2002 to 2007, and was home to the NAPA Auto Parts 200, a NASCAR Nationwide Series race, and the Montréal 200, a Grand Am Rolex Sports Car Series race.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Auto_racing",
@@ -3496,7 +3464,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Uniprix Stadium, built in 1993 on the site of Jarry Park, is used for the National Bank Open (formerly known as the Rogers Cup) men's and women's tennis tournaments. The men's tournament is a Masters 1000 event on the ATP Tour, and the women's tournament is a Premier tournament on the WTA Tour . The men's and women's tournaments alternate between Montreal and Toronto every year.",
+                        "value": "Uniprix Stadium, built in 1993 on the site of Jarry Park, is used for the National Bank Open (formerly known as the Rogers Cup) men's and women's tennis tournaments. The men's tournament is a Masters 1000 event on the ATP Tour, and the women's tournament is a Premier tournament on the WTA Tour. The men's and women's tournaments alternate between Montreal and Toronto every year.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Uniprix_Stadium",
@@ -3630,7 +3598,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "Montreal has three daily newspapers, the English-language Montreal Gazette and the French-language Le Journal de Montréal, and Le Devoir; another French-language daily, La Presse, became an online daily in 2018. There are two free French dailies, Métro and 24 Heures . Montreal has numerous weekly tabloids and community newspapers serving various neighbourhoods, ethnic groups and schools.",
+                        "value": "Montreal has three daily newspapers, the English-language Montreal Gazette and the French-language Le Journal de Montréal, and Le Devoir; another French-language daily, La Presse, became an online daily in 2018. There are two free French dailies, Métro and 24 Heures. Montreal has numerous weekly tabloids and community newspapers serving various neighbourhoods, ethnic groups and schools.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Montreal_Gazette",
@@ -3758,7 +3726,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "Since 1975, when Montreal's homicide rate peaked at around 10.3 per 100,000 people with a total of 112 murders, the overall crime rate in Montreal has declined, with a few notable exceptions, reaching a minimum in 2016 with 23 murders. Sex crimes have increased 14.5 per cent between 2015 and 2016 and fraud cases have increased by 13 per cent over the same period. The major criminal organizations active in Montreal are the Rizzuto crime family, Hells Angels and West End Gang . However, in the 2020s, the city has seen an increase in overall crime, with a notable increase in homicides. 25 homicides were reported in 2020 which matched the number reported in 2019. The next year saw a 48% increase in murders with a total of 37 in 2021, giving the city a homicide rate of around 2.1 per 100,000 people. The Montreal Police Annual Report for 2021 showed that there were 144 shootings across the city, or an average of one shooting every 2.5 days. In comparison, there were 71 shootings recorded the year before. 2022 saw another 10.8% increase in homicides, with a total of 41 being reported (giving a slightly higher homicide rate of 2.3 per 100,000 people), the highest number since 2007, when there were 42.",
+                        "value": "Since 1975, when Montreal's homicide rate peaked at around 10.3 per 100,000 people with a total of 112 murders, the overall crime rate in Montreal has declined, with a few notable exceptions, reaching a minimum in 2016 with 23 murders. Sex crimes have increased 14.5 per cent between 2015 and 2016 and fraud cases have increased by 13 per cent over the same period. The major criminal organizations active in Montreal are the Rizzuto crime family, Hells Angels and West End Gang. However, in the 2020s, the city has seen an increase in overall crime, with a notable increase in homicides. 25 homicides were reported in 2020 which matched the number reported in 2019. The next year saw a 48% increase in murders with a total of 37 in 2021, giving the city a homicide rate of around 2.1 per 100,000 people. The Montreal Police Annual Report for 2021 showed that there were 144 shootings across the city, or an average of one shooting every 2.5 days. In comparison, there were 71 shootings recorded the year before. 2022 saw another 10.8% increase in homicides, with a total of 41 being reported (giving a slightly higher homicide rate of 2.3 per 100,000 people), the highest number since 2007, when there were 42.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Rizzuto_crime_family",
@@ -3782,7 +3750,7 @@ with request parameter:
                 "has_parts": [
                     {
                         "type": "paragraph",
-                        "value": "The education system in Quebec is different from other systems in North America. Between high school (which ends at grade 11) and university, students must go through an additional school called CEGEP . CEGEPs offer pre-university (2-years) and technical (3-years) programs. In Montreal, seventeen CEGEPs offer courses in French and five in English.",
+                        "value": "The education system in Quebec is different from other systems in North America. Between high school (which ends at grade 11) and university, students must go through an additional school called CEGEP. CEGEPs offer pre-university (2-years) and technical (3-years) programs. In Montreal, seventeen CEGEPs offer courses in French and five in English.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Education_in_Quebec",
@@ -3800,7 +3768,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "French-language elementary and secondary public schools in Montreal are operated by the Centre de services scolaire de Montréal (CSSDM), Centre de services scolaire Marguerite-Bourgeoys and the Centre de services scolaire de la Pointe-de-l'Île .",
+                        "value": "French-language elementary and secondary public schools in Montreal are operated by the Centre de services scolaire de Montréal (CSSDM), Centre de services scolaire Marguerite-Bourgeoys and the Centre de services scolaire de la Pointe-de-l'Île.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Centre_de_services_scolaire_de_Montréal",
@@ -3818,7 +3786,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "English-language elementary and secondary public schools on Montreal Island are operated by the English Montreal School Board and the Lester B. Pearson School Board .",
+                        "value": "English-language elementary and secondary public schools on Montreal Island are operated by the English Montreal School Board and the Lester B. Pearson School Board.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/English_Montreal_School_Board",
@@ -3849,7 +3817,7 @@ with request parameter:
                                 "has_parts": [
                                     {
                                         "type": "list_item",
-                                        "value": "McGill University is one of Canada's leading post-secondary institutions and is widely regarded as a world-class institution. In 2021, McGill was ranked as the top medical-doctoral university in Canada for the seventeenth consecutive year by Maclean's and second in Canada and the 27th best university in the world by the QS World University Rankings .",
+                                        "value": "McGill University is one of Canada's leading post-secondary institutions and is widely regarded as a world-class institution. In 2021, McGill was ranked as the top medical-doctoral university in Canada for the seventeenth consecutive year by Maclean's and second in Canada and the 27th best university in the world by the QS World University Rankings.",
                                         "links": [
                                             {
                                                 "url": "https://en.wikipedia.org/wiki/McGill_University",
@@ -3914,7 +3882,7 @@ with request parameter:
                                     },
                                     {
                                         "type": "list_item",
-                                        "value": "Université du Québec à Montréal (UQAM) is the Montreal campus of Université du Québec . UQAM generally specializes in liberal-arts, although many programs related to the sciences are available.The Université du Québec network also has three separately run schools in Montreal, notably the École de technologie supérieure (ETS), the École nationale d'administration publique (ÉNAP) and the Institut national de la recherche scientifique (INRS) .",
+                                        "value": "Université du Québec à Montréal (UQAM) is the Montreal campus of Université du Québec. UQAM generally specializes in liberal-arts, although many programs related to the sciences are available.The Université du Québec network also has three separately run schools in Montreal, notably the École de technologie supérieure (ETS), the École nationale d'administration publique (ÉNAP) and the Institut national de la recherche scientifique (INRS).",
                                         "links": [
                                             {
                                                 "url": "https://en.wikipedia.org/wiki/Université_du_Québec_à_Montréal",
@@ -3940,7 +3908,7 @@ with request parameter:
                                     },
                                     {
                                         "type": "list_item",
-                                        "value": "The Université du Québec network also has three separately run schools in Montreal, notably the École de technologie supérieure (ETS), the École nationale d'administration publique (ÉNAP) and the Institut national de la recherche scientifique (INRS) .",
+                                        "value": "The Université du Québec network also has three separately run schools in Montreal, notably the École de technologie supérieure (ETS), the École nationale d'administration publique (ÉNAP) and the Institut national de la recherche scientifique (INRS).",
                                         "links": [
                                             {
                                                 "url": "https://en.wikipedia.org/wiki/École_de_technologie_supérieure",
@@ -3998,7 +3966,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Additionally, two French-language universities, Université de Sherbrooke and Université Laval have campuses in the nearby suburb of Longueuil on Montreal's south shore . Also, l'Institut de pastorale des Dominicains is Montreal's university centre of Ottawa's Collège Universitaire Dominicain /Dominican University College . The Faculté de théologie évangélique is Nova Scotia 's Acadia University Montreal based serving French Protestant community in Canada by offering both a Bachelor and a Master program in theology",
+                                "value": "Additionally, two French-language universities, Université de Sherbrooke and Université Laval have campuses in the nearby suburb of Longueuil on Montreal's south shore. Also, l'Institut de pastorale des Dominicains is Montreal's university centre of Ottawa's Collège Universitaire Dominicain /Dominican University College. The Faculté de théologie évangélique is Nova Scotia 's Acadia University Montreal based serving French Protestant community in Canada by offering both a Bachelor and a Master program in theology",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Université_de_Sherbrooke",
@@ -4066,7 +4034,7 @@ with request parameter:
                     },
                     {
                         "type": "paragraph",
-                        "value": "The island of Montreal is a hub for the Quebec Autoroute system, and is served by Quebec Autoroutes A-10 (known as the Bonaventure Expressway on the island of Montreal), A-15 (aka the Décarie Expressway south of the A-40 and the Laurentian Autoroute to the north of it), A-13 (aka Chomedey Autoroute), A-20, A-25, A-40 (part of the Trans-Canada Highway system, and known as \"The Metropolitan\" or simply \"The Met\" in its elevated mid-town section), A-520 and R-136 (aka the Ville-Marie Autoroute). Many of these Autoroutes are frequently congested at rush hour . However, in recent years, the government has acknowledged this problem and is working on long-term solutions to alleviate the congestion. One such example is the extension of Quebec Autoroute 30 on Montreal's south shore, which will be a bypass for trucks and intercity traffic.",
+                        "value": "The island of Montreal is a hub for the Quebec Autoroute system, and is served by Quebec Autoroutes A-10 (known as the Bonaventure Expressway on the island of Montreal), A-15 (aka the Décarie Expressway south of the A-40 and the Laurentian Autoroute to the north of it), A-13 (aka Chomedey Autoroute), A-20, A-25, A-40 (part of the Trans-Canada Highway system, and known as \"The Metropolitan\" or simply \"The Met\" in its elevated mid-town section), A-520 and R-136 (aka the Ville-Marie Autoroute). Many of these Autoroutes are frequently congested at rush hour. However, in recent years, the government has acknowledged this problem and is working on long-term solutions to alleviate the congestion. One such example is the extension of Quebec Autoroute 30 on Montreal's south shore, which will be a bypass for trucks and intercity traffic.",
                         "links": [
                             {
                                 "url": "https://en.wikipedia.org/wiki/Autoroute_(Quebec)",
@@ -4192,7 +4160,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "It is one of Air Canada's major hubs and operates on average approximately 2,400 flights per week between Montreal and 155 destinations, spread on five continents .",
+                                "value": "It is one of Air Canada's major hubs and operates on average approximately 2,400 flights per week between Montreal and 155 destinations, spread on five continents.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Airline_hub",
@@ -4222,7 +4190,7 @@ with request parameter:
                         "has_parts": [
                             {
                                 "type": "paragraph",
-                                "value": "Montreal-based Via Rail Canada provides rail service to other cities in Canada, particularly to Quebec City and Toronto along the Quebec City – Windsor Corridor . Amtrak, the U.S. national passenger rail system, operates its Adirondack daily to New York. All intercity trains and most commuter trains operate out of Central Station .",
+                                "value": "Montreal-based Via Rail Canada provides rail service to other cities in Canada, particularly to Quebec City and Toronto along the Quebec City – Windsor Corridor. Amtrak, the U.S. national passenger rail system, operates its Adirondack daily to New York. All intercity trains and most commuter trains operate out of Central Station.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Quebec_City_–_Windsor_Corridor",
@@ -4298,7 +4266,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "Montreal-based CN was formed in 1919 by the Canadian government following a series of country-wide rail bankruptcies. It was formed from the Grand Trunk, Midland and Canadian Northern Railways, and has risen to become CPR's chief rival in freight carriage in Canada. Like the CPR, CN divested itself of passenger services in favour of Via. CN's flagship train, the Super Continental, ran daily from Central Station to Vancouver and subsequently became a Via train in 1978. It was eliminated in 1990 in favour of rerouting The Canadian .",
+                                "value": "Montreal-based CN was formed in 1919 by the Canadian government following a series of country-wide rail bankruptcies. It was formed from the Grand Trunk, Midland and Canadian Northern Railways, and has risen to become CPR's chief rival in freight carriage in Canada. Like the CPR, CN divested itself of passenger services in favour of Via. CN's flagship train, the Super Continental, ran daily from Central Station to Vancouver and subsequently became a Via train in 1978. It was eliminated in 1990 in favour of rerouting The Canadian.",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Grand_Trunk_Railway",
@@ -4326,7 +4294,7 @@ with request parameter:
                             },
                             {
                                 "type": "paragraph",
-                                "value": "On April 22, 2016, the forthcoming automated rapid transit system, the Réseau express métropolitain (REM), was unveiled. Groundbreaking occurred April 12, 2018, and construction of the 67-kilometre-long (42 mi) network – consisting of three branches, 26 stations, and the conversion of the region's busiest commuter railway – commenced the following month. To be opened in three phases as of 2022, the REM will be completed by mid-2024, becoming the fourth largest automated rapid transit network after the Dubai Metro, the Singapore Mass Rapid Transit, and the Vancouver SkyTrain . Most of it will be financed by pension fund manager Caisse de dépôt et placement du Québec (CDPQ Infra).",
+                                "value": "On April 22, 2016, the forthcoming automated rapid transit system, the Réseau express métropolitain (REM), was unveiled. Groundbreaking occurred April 12, 2018, and construction of the 67-kilometre-long (42 mi) network – consisting of three branches, 26 stations, and the conversion of the region's busiest commuter railway – commenced the following month. To be opened in three phases as of 2022, the REM will be completed by mid-2024, becoming the fourth largest automated rapid transit network after the Dubai Metro, the Singapore Mass Rapid Transit, and the Vancouver SkyTrain. Most of it will be financed by pension fund manager Caisse de dépôt et placement du Québec (CDPQ Infra).",
                                 "links": [
                                     {
                                         "url": "https://en.wikipedia.org/wiki/Rapid_transit",
@@ -4373,10 +4341,6 @@ with request parameter:
                         ]
                     }
                 ]
-            },
-            {
-                "name": "Notable people",
-                "type": "section"
             },
             {
                 "name": "International relations",
@@ -4595,240 +4559,7 @@ with request parameter:
                         ]
                     }
                 ]
-            },
-            {
-                "name": "See also",
-                "type": "section",
-                "has_parts": [
-                    {
-                        "type": "list",
-                        "has_parts": [
-                            {
-                                "type": "list_item",
-                                "value": "List of anglophone communities in Quebec",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/List_of_anglophone_communities_in_Quebec",
-                                        "text": "List of anglophone communities in Quebec"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "List of mayors of Montreal",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/List_of_mayors_of_Montreal",
-                                        "text": "List of mayors of Montreal"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "List of Montreal music venues",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/List_of_Montreal_music_venues",
-                                        "text": "List of Montreal music venues"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "List of shopping malls in Montreal",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/List_of_shopping_malls_in_Montreal",
-                                        "text": "List of shopping malls in Montreal"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "List of tallest buildings in Montreal",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/List_of_tallest_buildings_in_Montreal",
-                                        "text": "List of tallest buildings in Montreal"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Montreal International Games Summit",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Montreal_International_Games_Summit",
-                                        "text": "Montreal International Games Summit"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Order of Montreal",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Order_of_Montreal",
-                                        "text": "Order of Montreal"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Royal eponyms in Canada",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Royal_eponyms_in_Canada",
-                                        "text": "Royal eponyms in Canada"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Further reading",
-                "type": "section",
-                "has_parts": [
-                    {
-                        "type": "list",
-                        "has_parts": [
-                            {
-                                "type": "list_item",
-                                "value": "Collard, Edgar A. (1976). Montréal: The Days That Are No More, in series, Totem Book. This ed. slightly edited . Toronto, Ont.: Doubleday Canada,, cop. 1976. x, 140, p., ill. in b&w with maps and numerous sketches. ISBN 0-00-216686-0 .",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/ISBN_(identifier)",
-                                        "text": "ISBN"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Special:BookSources/0-00-216686-0",
-                                        "text": "0-00-216686-0"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Gagnon, Robert (1996). Anglophones at the C.E.C.M.: a Reflection of the Linguistic Duality of Montréal . Trans. by Peter Keating. Montréal: Commission des écoles catholiques de Montréal. 124 p., ill. with b&w photos. ISBN 2-920855-98-0 .",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/ISBN_(identifier)",
-                                        "text": "ISBN"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Special:BookSources/2-920855-98-0",
-                                        "text": "2-920855-98-0"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Harris, David; Lyon, Patricia (2004). Montréal . Fodor's. ISBN 978-1-4000-1315-9 . Archived from the original on October 18, 2023. Retrieved December 28, 2021 .",
-                                "links": [
-                                    {
-                                        "url": "https://books.google.com/books?id=bpxmNNnjBQoC&pg=PP1",
-                                        "text": "Montréal"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/ISBN_(identifier)",
-                                        "text": "ISBN"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Special:BookSources/978-1-4000-1315-9",
-                                        "text": "978-1-4000-1315-9"
-                                    },
-                                    {
-                                        "url": "https://web.archive.org/web/20231018183728/https://books.google.com/books?id=bpxmNNnjBQoC&pg=PP1#v=onepage&q&f=false",
-                                        "text": "Archived"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Heritage Montréal (1992). Steps in Time = Patrimoine en marche . Montréal: Québécor. 4 vol. of 20, 20 p. each. Text printed \"tête-bêche\" in English and in French. On title covers: \"Montréal, fête, 350 ans\"."
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Marsan, Jean-Claude (1990). Montreal in evolution . McGill-Queen's University Press. ISBN 978-0-7735-0798-2 .",
-                                "links": [
-                                    {
-                                        "url": "https://archive.org/details/montrealinevolut00jean",
-                                        "text": "Montreal in evolution"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/ISBN_(identifier)",
-                                        "text": "ISBN"
-                                    },
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Special:BookSources/978-0-7735-0798-2",
-                                        "text": "978-0-7735-0798-2"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Tomàs, Mariona. \"Exploring the metropolitan trap: the case of Montreal.\" International Journal of Urban and Regional Research (2012) 36#3 pp: 554–567. doi:10.1111/j.1468-2427.2011.01066.x .",
-                                "links": [
-                                    {
-                                        "url": "https://en.wikipedia.org/wiki/Doi_(identifier)",
-                                        "text": "doi"
-                                    },
-                                    {
-                                        "url": "https://doi.org/10.1111%2Fj.1468-2427.2011.01066.x",
-                                        "text": "10.1111/j.1468-2427.2011.01066.x"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "\"2006 Census of Canada\" . Statistics Canada. 2008. Archived from the original on October 10, 2008. Retrieved May 28, 2008 .",
-                                "links": [
-                                    {
-                                        "url": "https://web.archive.org/web/20081010164347/http://www12.statcan.ca/english/census/index.cfm",
-                                        "text": "\"2006 Census of Canada\""
-                                    },
-                                    {
-                                        "url": "http://www12.statcan.ca/english/census/index.cfm",
-                                        "text": "the original"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "\"Montreal\" . 2006 Census of Canada: Community Profiles . Statistics Canada. 2008. Archived from the original on December 2, 2008. Retrieved May 28, 2008 .",
-                                "links": [
-                                    {
-                                        "url": "https://web.archive.org/web/20081202162740/http://www12.statcan.ca/english/census06/data/profiles/community/Details/Page.cfm?Lang=E&Geo1=CD&Code1=2466&Geo2=PR&Code2=24&Data=Count&SearchText=Montreal&SearchType=Begins&SearchPR=01&B1=All&Custom=",
-                                        "text": "\"Montreal\""
-                                    },
-                                    {
-                                        "url": "http://www12.statcan.ca/english/census06/data/profiles/community/Details/Page.cfm?Lang=E&Geo1=CD&Code1=2466&Geo2=PR&Code2=24&Data=Count&SearchText=Montreal&SearchType=Begins&SearchPR=01&B1=All&Custom=",
-                                        "text": "the original"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Natural Resources Canada (2005). Canadian Geographical Names: Island of Montreal . Retrieved August 29, 2005.",
-                                "links": [
-                                    {
-                                        "url": "https://web.archive.org/web/20080531042123/http://geonames.nrcan.gc.ca/education/montreal_e.php",
-                                        "text": "Canadian Geographical Names: Island of Montreal"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "list_item",
-                                "value": "Michael Sletcher, \"Montréal\", in James Ciment, ed., Colonial America: An Encyclopedia of Social, Political, Cultural, and Economic History (5 vols., N.Y., 2005)."
-                            }
-                        ]
-                    }
-                ]
             }
         ]
     }
 ]
-```
-</detail>
-
