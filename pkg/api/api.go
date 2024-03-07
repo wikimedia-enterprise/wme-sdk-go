@@ -52,6 +52,21 @@ type Request struct {
 	// Limits the amount of results from the API (for now works only with Articles API).
 	// This is an optional argument.
 	Limit int `json:"limit,omitempty"`
+
+	// Provides a way to open parallel connections to realtime streaming API.
+	// Allows to target subsets of partitions in each of the parallel connections.
+	// The max allowed number of parallel connections to realtime API is 10, i.e., the allowed range for parts is 0 through 9.
+	// Each part value lets one connect to 1/10 th of the total partitions.
+	// e.g., [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+	Parts []int `json:"parts,omitempty"`
+
+	// Used for reconnection to realtime streaming API by passing this parameter.
+	// This is map of partition:latest offset consumed.
+	Offsets map[int]int64 `json:"offsets,omitempty"`
+
+	// Used for reconnection to realtime streaming API by passing this parameter.
+	// This is map of partition:latest event.date_published consumed.
+	SincePerPartition map[int]time.Time ` json:"since_per_partition,omitempty"`
 }
 
 // CodesGetter is an interface that retrieves codes from the API.
