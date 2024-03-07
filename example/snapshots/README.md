@@ -814,7 +814,7 @@ HEAD https://api.enterprise.wikimedia.com/v2/snapshots/afwikibooks_namespace_0/d
 ```
 
 Response headers:
-![Response headers](example/snapshots/response_headers.png)
+![Response headers](./response_headers.png)
 
 Here, the size (content length) is 215077 bytes.
 
