@@ -3,8 +3,7 @@ package api
 // Scores ORES scores representation, has nothing on https://schema.org/, it's a custom dataset.
 // For more info https://ores.wikimedia.org/.
 type Scores struct {
-	Damaging  *ProbabilityScore `json:"damaging,omitempty"`
-	GoodFaith *ProbabilityScore `json:"goodfaith,omitempty"`
+	RevertRisk *ProbabilityScore `json:"revertrisk,omitempty" avro:"revertrisk"`
 }
 
 // Probability numeric probability values form ORES models.
