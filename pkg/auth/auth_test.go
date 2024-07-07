@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -245,40 +246,40 @@ func (m *MockAPI) RevokeToken(ctx context.Context, req *auth.RevokeTokenRequest)
 	return args.Error(0)
 }
 
-type HelperTestSuite struct {
+type HelperClearTestSuite struct {
 	suite.Suite
 	mockAPI *MockAPI
 	helper  *auth.Helper
 }
 
-func (suite *HelperTestSuite) SetupTest() {
-	suite.mockAPI = new(MockAPI)
-	suite.helper = &auth.Helper{
+func (s *HelperClearTestSuite) SetupTest() {
+	s.mockAPI = new(MockAPI)
+	s.helper = &auth.Helper{
 		Username: "test_user",
 		Password: "test_password",
-		API:      suite.mockAPI,
+		API:      s.mockAPI,
 	}
 	os.Remove("tokenstore.json")
 }
 
-func (suite *HelperTestSuite) TearDownTest() {
+func (suite *HelperClearTestSuite) TearDownTest() {
 	os.Remove("tokenstore.json")
 }
 
-func (suite *HelperTestSuite) TestGetToken_NewToken() {
-	suite.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
+func (s *HelperClearTestSuite) TestGetToken_NewToken() {
+	s.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
 		AccessToken:  "new_access_token",
 		RefreshToken: "new_refresh_token",
 	}, nil)
 
-	token, err := suite.helper.GetToken()
+	token, err := s.helper.GetToken()
 
-	suite.NoError(err)
-	suite.Equal("new_access_token", token)
-	suite.mockAPI.AssertExpectations(suite.T())
+	s.NoError(err)
+	s.Equal("new_access_token", token)
+	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (suite *HelperTestSuite) TestGetToken_ExistingValidToken() {
+func (s *HelperClearTestSuite) TestGetToken_ExistingValidToken() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "existing_access_token",
 		AccessTokenGeneratedAt:  time.Now(),
@@ -289,15 +290,15 @@ func (suite *HelperTestSuite) TestGetToken_ExistingValidToken() {
 	data, _ := json.Marshal(tokenStore)
 	os.WriteFile("tokenstore.json", data, 0600)
 
-	token, err := suite.helper.GetToken()
+	token, err := s.helper.GetToken()
 
-	suite.NoError(err)
-	suite.Equal("existing_access_token", token)
-	suite.mockAPI.AssertNotCalled(suite.T(), "Login")
-	suite.mockAPI.AssertNotCalled(suite.T(), "RefreshToken")
+	s.NoError(err)
+	s.Equal("existing_access_token", token)
+	s.mockAPI.AssertNotCalled(s.T(), "Login")
+	s.mockAPI.AssertNotCalled(s.T(), "RefreshToken")
 }
 
-func (suite *HelperTestSuite) TestGetToken_ExpiredAccessToken() {
+func (s *HelperClearTestSuite) TestGetToken_ExpiredAccessToken() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "expired_access_token",
 		AccessTokenGeneratedAt:  time.Now().Add(-25 * time.Hour),
@@ -308,21 +309,21 @@ func (suite *HelperTestSuite) TestGetToken_ExpiredAccessToken() {
 	data, _ := json.Marshal(tokenStore)
 	os.WriteFile("tokenstore.json", data, 0600)
 
-	suite.mockAPI.On("RefreshToken", mock.Anything, &auth.RefreshTokenRequest{
+	s.mockAPI.On("RefreshToken", mock.Anything, &auth.RefreshTokenRequest{
 		Username:     "test_user",
 		RefreshToken: "valid_refresh_token",
 	}).Return(&auth.RefreshTokenResponse{
 		AccessToken: "new_access_token",
 	}, nil)
 
-	token, err := suite.helper.GetToken()
+	token, err := s.helper.GetToken()
 
-	suite.NoError(err)
-	suite.Equal("new_access_token", token)
-	suite.mockAPI.AssertExpectations(suite.T())
+	s.NoError(err)
+	s.Equal("new_access_token", token)
+	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (suite *HelperTestSuite) TestGetToken_ExpiredRefreshToken() {
+func (s *HelperClearTestSuite) TestGetToken_ExpiredRefreshToken() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "expired_access_token",
 		AccessTokenGeneratedAt:  time.Now().Add(-25 * time.Hour),
@@ -333,18 +334,109 @@ func (suite *HelperTestSuite) TestGetToken_ExpiredRefreshToken() {
 	data, _ := json.Marshal(tokenStore)
 	os.WriteFile("tokenstore.json", data, 0600)
 
-	suite.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
+	s.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
 		AccessToken:  "new_access_token",
 		RefreshToken: "new_refresh_token",
 	}, nil)
 
-	token, err := suite.helper.GetToken()
+	token, err := s.helper.GetToken()
 
-	suite.NoError(err)
-	suite.Equal("new_access_token", token)
-	suite.mockAPI.AssertExpectations(suite.T())
+	s.NoError(err)
+	s.Equal("new_access_token", token)
+	s.mockAPI.AssertExpectations(s.T())
 }
 
+func (s *HelperClearTestSuite) TestClearState_FileDoesNotExist() {
+	// Mock os.Stat to return an error indicating the file does not exist
+	originalStat := osStat
+	osStat = func(name string) (os.FileInfo, error) {
+		return nil, os.ErrNotExist
+	}
+	defer func() { osStat = originalStat }()
+
+	err := s.helper.ClearState()
+	s.Assert().NoError(err)
+}
+
+func (s *HelperClearTestSuite) TestClearState_ErrorCheckingFileExistence() {
+
+	// delete file "tokenstore.json"
+	os.Remove("tokenstore.json")
+
+	err := s.helper.ClearState()
+	s.Assert().NoError(err)
+}
+
+func (s *HelperClearTestSuite) TestClearState_ErrorReadingFile() {
+	// Mock os.Stat to indicate the file exists
+	originalStat := osStat
+	osStat = func(name string) (os.FileInfo, error) {
+		return &mockFileInfo{}, nil
+	}
+	defer func() { osStat = originalStat }()
+
+	// Mock os.ReadFile to return an error
+	originalReadFile := osReadFile
+	osReadFile = func(name string) ([]byte, error) {
+		return nil, errors.New("read error")
+	}
+	defer func() { osReadFile = originalReadFile }()
+
+	err := s.helper.ClearState()
+	s.Assert().NoError(err)
+}
+
+func (s *HelperClearTestSuite) TestClearState_Success() {
+	// Mock os.Stat to indicate the file exists
+	originalStat := osStat
+	osStat = func(name string) (os.FileInfo, error) {
+		return &mockFileInfo{}, nil
+	}
+	defer func() { osStat = originalStat }()
+
+	// Mock os.ReadFile to return valid JSON data
+	originalReadFile := osReadFile
+	tokenStore := auth.Tokenstore{
+		RefreshToken: "test-refresh-token",
+	}
+	data, _ := json.Marshal(tokenStore)
+	osReadFile = func(name string) ([]byte, error) {
+		return data, nil
+	}
+	defer func() { osReadFile = originalReadFile }()
+
+	// Mock API.RevokeToken to return no error
+	s.mockAPI.On("RevokeToken", mock.Anything, &auth.RevokeTokenRequest{
+		RefreshToken: "test-refresh-token",
+	}).Return(nil)
+
+	// Mock os.Remove to return no error
+	originalRemove := osRemove
+	osRemove = func(name string) error {
+		return nil
+	}
+	defer func() { osRemove = originalRemove }()
+
+	err := s.helper.ClearState()
+	s.Assert().NoError(err)
+}
+
+type mockFileInfo struct{}
+
+func (m *mockFileInfo) Name() string       { return "tokenstore.json" }
+func (m *mockFileInfo) Size() int64        { return 0 }
+func (m *mockFileInfo) Mode() os.FileMode  { return 0 }
+func (m *mockFileInfo) ModTime() time.Time { return time.Time{} }
+func (m *mockFileInfo) IsDir() bool        { return false }
+func (m *mockFileInfo) Sys() interface{}   { return nil }
+
+// Mock os.Stat, os.ReadFile, and os.Remove functions
+var (
+	osStat     = os.Stat
+	osReadFile = os.ReadFile
+	osRemove   = os.Remove
+)
+
 func TestHelperTestSuite(t *testing.T) {
-	suite.Run(t, new(HelperTestSuite))
+	suite.Run(t, new(HelperClearTestSuite))
 }

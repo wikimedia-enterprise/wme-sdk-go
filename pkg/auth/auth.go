@@ -70,6 +70,8 @@ type API interface {
 	TokenRevoker
 }
 
+var tokenStoreFile = "tokenstore.json"
+
 // NewClient create new http client for WME authentication.
 func NewClient() API {
 	return &Client{
@@ -201,8 +203,6 @@ func (h *Helper) GetToken() (string, error) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
 
-	tokenStoreFile := "tokenstore.json"
-
 	// Check if the tokenstore file exists
 	if _, err := os.Stat(tokenStoreFile); os.IsNotExist(err) {
 		// File does not exist, create and login
@@ -290,4 +290,49 @@ func (h *Helper) storeTokens(tokenStoreFile string, tokenStore *Tokenstore) erro
 	}
 
 	return os.WriteFile(tokenStoreFile, data, 0600)
+}
+
+// ClearState clears the token state by revoking the refresh token and deleting the tokenstore file
+func (h *Helper) ClearState() error {
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+
+	// Check if the file exists
+	if _, err := os.Stat(tokenStoreFile); err != nil {
+		if os.IsNotExist(err) {
+			// File does not exist, nothing to clear
+			return nil
+		}
+		// Some other error occurred when checking the file
+		return err
+	}
+
+	// Read the file
+	data, err := os.ReadFile(tokenStoreFile)
+	if err != nil {
+		return err
+	}
+
+	// Unmarshal the token store
+	var tokenStore Tokenstore
+	if err := json.Unmarshal(data, &tokenStore); err != nil {
+		return err
+	}
+
+	// Revoke the refresh token if it exists
+	if tokenStore.RefreshToken != "" {
+		revokeRequest := &RevokeTokenRequest{
+			RefreshToken: tokenStore.RefreshToken,
+		}
+		if err := h.API.RevokeToken(context.Background(), revokeRequest); err != nil {
+			return err
+		}
+	}
+
+	// Remove the token store file
+	if err := os.Remove(tokenStoreFile); err != nil {
+		return err
+	}
+
+	return nil
 }
