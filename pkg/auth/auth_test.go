@@ -288,7 +288,10 @@ func (s *HelperClearTestSuite) TestGetToken_ExistingValidToken() {
 	}
 
 	data, _ := json.Marshal(tokenStore)
-	os.WriteFile("tokenstore.json", data, 0600)
+	err := os.WriteFile("tokenstore.json", data, 0600)
+	if err != nil {
+		s.FailNow(err.Error())
+	}
 
 	token, err := s.helper.GetAccessToken()
 
@@ -307,7 +310,10 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredAccessToken() {
 	}
 
 	data, _ := json.Marshal(tokenStore)
-	os.WriteFile("tokenstore.json", data, 0600)
+	err := os.WriteFile("tokenstore.json", data, 0600)
+	if err != nil {
+		s.FailNow(err.Error())
+	}
 
 	s.mockAPI.On("RefreshToken", mock.Anything, &auth.RefreshTokenRequest{
 		Username:     "test_user",
@@ -332,7 +338,10 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredRefreshToken() {
 	}
 
 	data, _ := json.Marshal(tokenStore)
-	os.WriteFile("tokenstore.json", data, 0600)
+	err := os.WriteFile("tokenstore.json", data, 0600)
+	if err != nil {
+		s.FailNow(err.Error())
+	}
 
 	s.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
 		AccessToken:  "new_access_token",
