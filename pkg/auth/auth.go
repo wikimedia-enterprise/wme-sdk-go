@@ -299,6 +299,7 @@ func (h *Helper) storeTokens(tokenStoreFile string, tokenStore *Tokenstore) erro
 		return err
 	}
 
+	//nolint:errcheck
 	return os.WriteFile(tokenStoreFile, data, 0600)
 }
 
