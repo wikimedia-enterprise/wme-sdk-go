@@ -48,6 +48,18 @@ func main() {
 	log.Println(lgn.AccessToken)
 }
 ```
+Auth APIs
+The following are the main authentication APIs provided by the SDK:
+
+Login
+RefreshToken
+RevokeToken
+Helper APIs
+These helper APIs provide reference implementations for clients on how token state management can be done and how tokens can be used in concurrent processes using WME APIs:
+
+GetAccessToken
+ClearState
+Example Usage
 
 - putting it all together and making your first API call (we will be querying the Structured Contents endpoint, which is part of the [On-demand API](https://enterprise.wikimedia.com/docs/on-demand/))
 
@@ -109,6 +121,7 @@ func main() {
 		log.Println(sct.Abstract)
 	}
 }
+
 ```
 
 - additional examples, such as connecting to the [streaming API](/example/streaming/), can be found [here](/example/)

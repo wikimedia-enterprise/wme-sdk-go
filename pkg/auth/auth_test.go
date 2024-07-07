@@ -272,7 +272,7 @@ func (s *HelperClearTestSuite) TestGetToken_NewToken() {
 		RefreshToken: "new_refresh_token",
 	}, nil)
 
-	token, err := s.helper.GetToken()
+	token, err := s.helper.GetAccessToken()
 
 	s.NoError(err)
 	s.Equal("new_access_token", token)
@@ -290,7 +290,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExistingValidToken() {
 	data, _ := json.Marshal(tokenStore)
 	os.WriteFile("tokenstore.json", data, 0600)
 
-	token, err := s.helper.GetToken()
+	token, err := s.helper.GetAccessToken()
 
 	s.NoError(err)
 	s.Equal("existing_access_token", token)
@@ -316,7 +316,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredAccessToken() {
 		AccessToken: "new_access_token",
 	}, nil)
 
-	token, err := s.helper.GetToken()
+	token, err := s.helper.GetAccessToken()
 
 	s.NoError(err)
 	s.Equal("new_access_token", token)
@@ -339,7 +339,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredRefreshToken() {
 		RefreshToken: "new_refresh_token",
 	}, nil)
 
-	token, err := s.helper.GetToken()
+	token, err := s.helper.GetAccessToken()
 
 	s.NoError(err)
 	s.Equal("new_access_token", token)

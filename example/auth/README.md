@@ -27,8 +27,8 @@ mv sample.env .env
 Edit the `.env` file to include your credentials:
 
 ```
-USERNAME=your_username
-PASSWORD=your_password
+WME_USERNAME=your_username
+WME_PASSWORD=your_password
 ```
 
 ### 3. Install Dependencies

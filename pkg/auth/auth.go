@@ -185,8 +185,8 @@ func NewHelper(api API) (*Helper, error) {
 		return nil, fmt.Errorf("error loading .env file: %v", err)
 	}
 
-	username := os.Getenv("USERNAME")
-	password := os.Getenv("PASSWORD")
+	username := os.Getenv("WME_USERNAME")
+	password := os.Getenv("WME_PASSWORD")
 	if username == "" || password == "" {
 		return nil, errors.New("username or password not set in .env file")
 	}
@@ -199,7 +199,7 @@ func NewHelper(api API) (*Helper, error) {
 }
 
 // GetToken manages the token state and returns a valid access token
-func (h *Helper) GetToken() (string, error) {
+func (h *Helper) GetAccessToken() (string, error) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
 

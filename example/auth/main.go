@@ -28,7 +28,7 @@ func main() {
 				continue
 			case <-time.After(23*time.Hour + 59*time.Second):
 				mu.Lock()
-				_, err := helper.GetToken()
+				_, err := helper.GetAccessToken()
 				if err != nil {
 					log.Printf("Failed to refresh token: %v", err)
 				} else {
@@ -41,7 +41,7 @@ func main() {
 
 	// Simulate an API call
 	for {
-		token, err := helper.GetToken()
+		token, err := helper.GetAccessToken()
 		if err != nil {
 			log.Fatalf("Failed to get token: %v", err)
 		}
