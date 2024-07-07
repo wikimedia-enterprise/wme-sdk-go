@@ -266,8 +266,18 @@ func (h *Helper) refreshAndStoreTokens(tokenStoreFile string, tokenStore *Tokens
 		Username:     h.Username,
 		RefreshToken: tokenStore.RefreshToken,
 	}
-	// Call refresh token API to get a new access token
-	refreshResponse, err := h.API.RefreshToken(context.Background(), refreshRequest)
+
+	var refreshResponse *RefreshTokenResponse
+	var err error
+
+	// Check if the refresh token is less than 30 days old
+	if time.Since(tokenStore.RefreshTokenGeneratedAt) < 30*24*time.Hour {
+		refreshResponse, err = h.API.RefreshToken(context.Background(), refreshRequest)
+	} else {
+		// If the refresh token is more than 30 days old, login again
+		return h.loginAndStoreTokens(tokenStoreFile)
+	}
+
 	if err != nil {
 		return "", err
 	}
