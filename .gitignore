@@ -1,3 +1,5 @@
 .env
 /wme-sdk-go
 tokenstore.json
+.pytest_cache
+__pycache__
