@@ -198,7 +198,7 @@ func NewHelper(api API) (*Helper, error) {
 	}, nil
 }
 
-// GetToken manages the token state and returns a valid access token
+// GetAccessToken manages the token state and returns a valid access token
 func (h *Helper) GetAccessToken() (string, error) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
