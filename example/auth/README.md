@@ -18,17 +18,10 @@ cd wme-sdk-go
 
 ### 2. Environment Variables
 
-There is a sample environment file `sample.env` provided in the repository. Rename it to `.env` and add your username and password.
-
-```sh
-mv sample.env .env
-```
-
-Edit the `.env` file to include your credentials:
-
-```
-WME_USERNAME=your_username
-WME_PASSWORD=your_password
+Create a .env file with the following contents:
+```bash
+export WME_USERNAME="...your username...";
+export WME_PASSWORD="...your password...";
 ```
 
 ### 3. Install Dependencies
@@ -81,53 +74,71 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
-	"time"
 
+	"github.com/wikimedia-enterprise/wme-sdk-go/pkg/api"
 	"github.com/wikimedia-enterprise/wme-sdk-go/pkg/auth"
 )
 
 func main() {
-	client := auth.NewClient()
-	helper, err := auth.NewHelper(client)
+	// Initialize the authentication client and helper
+	// We rely on authentication helper to return a valid access token for all our requests. The helper APIs will internally refresh, re-login as necessary.
+	authClient := auth.NewClient()
+	helper, err := auth.NewHelper(authClient)
 	if err != nil {
-		log.Fatalf("Failed to create helper: %v", err)
+		log.Fatalln(err)
 	}
 
-	var mu sync.Mutex
-	tokenRefreshChan := make(chan struct{})
+	var wg sync.WaitGroup
+	ctx := context.Background()
+	reqs := 50
+	wg.Add(reqs)
 
-	go func() {
-		for {
-			select {
-			case <-tokenRefreshChan:
-				continue
-			case <-time.After(23*time.Hour + 59*time.Second):
-				mu.Lock()
-				_, err := helper.GetToken()
-				if err != nil {
-					log.Printf("Failed to refresh token: %v", err)
-				} else {
-					log.Println("Token refreshed successfully")
-				}
-				mu.Unlock()
+	for i := 0; i < reqs; i++ {
+		go func(req int) {
+			defer wg.Done()
+			// Get access token
+			tkn, err := helper.GetAccessToken()
+			if err != nil {
+				log.Printf("failed to get access token for request %d: %v", req, err)
+				return
 			}
-		}
-	}()
 
-	for {
-		token, err := helper.GetToken()
-		if err != nil {
-			log.Fatalf("Failed to get token: %v", err)
-		}
+			// Call any WME API
+			clt := api.NewClient()
+			clt.SetAccessToken(tkn)
+			arq := &api.Request{
+				Fields: []string{"name", "abstract", "url", "version"},
+				Filters: []*api.Filter{
+					{
+						Field: "in_language.identifier",
+						Value: "en",
+					},
+				},
+			}
 
-		fmt.Printf("Access token: %s\n", token)
-		tokenRefreshChan <- struct{}{}
-		time.Sleep(10 * time.Minute)
+			res, err := clt.GetArticles(ctx, "Montreal", arq)
+			if err != nil {
+				log.Printf("failed to get articles for request %d: %v", req, err)
+				return
+			}
+
+			log.Printf("request %d: %d articles found", req, len(res))
+
+			// Your code here......
+
+		}(i)
+	}
+
+	wg.Wait()
+
+	// Revoke token and remove state from storage when we are done using WME APIs
+	if err := helper.ClearState(); err != nil {
+		log.Printf("failed to clear state: %v", err)
 	}
 }
+
 ```
 
 ## Contributing

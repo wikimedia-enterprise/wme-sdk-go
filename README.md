@@ -14,6 +14,7 @@ go get github.com/wikimedia-enterprise/wme-sdk-go
 
 - expose your credentials (if you don't have credentials already, [sign up](https://dashboard.enterprise.wikimedia.com/signup/)):
 
+Create a .env file with the following contents:
 ```bash
 export WME_USERNAME="...your username...";
 export WME_PASSWORD="...your password...";

@@ -266,7 +266,7 @@ func (suite *HelperClearTestSuite) TearDownTest() {
 	os.Remove("tokenstore.json")
 }
 
-func (s *HelperClearTestSuite) TestGetToken_NewToken() {
+func (s *HelperClearTestSuite) TestGetNewToken() {
 	s.mockAPI.On("Login", mock.Anything, &auth.LoginRequest{Username: "test_user", Password: "test_password"}).Return(&auth.LoginResponse{
 		AccessToken:  "new_access_token",
 		RefreshToken: "new_refresh_token",
@@ -279,7 +279,7 @@ func (s *HelperClearTestSuite) TestGetToken_NewToken() {
 	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (s *HelperClearTestSuite) TestGetToken_ExistingValidToken() {
+func (s *HelperClearTestSuite) TestGetTokenExisting() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "existing_access_token",
 		AccessTokenGeneratedAt:  time.Now(),
@@ -301,7 +301,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExistingValidToken() {
 	s.mockAPI.AssertNotCalled(s.T(), "RefreshToken")
 }
 
-func (s *HelperClearTestSuite) TestGetToken_ExpiredAccessToken() {
+func (s *HelperClearTestSuite) TestGetExpiredAccessToken() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "expired_access_token",
 		AccessTokenGeneratedAt:  time.Now().Add(-25 * time.Hour),
@@ -329,7 +329,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredAccessToken() {
 	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (s *HelperClearTestSuite) TestGetToken_ExpiredRefreshToken() {
+func (s *HelperClearTestSuite) TestGetExpiredRefreshToken() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "expired_access_token",
 		AccessTokenGeneratedAt:  time.Now().Add(-25 * time.Hour),
@@ -355,7 +355,7 @@ func (s *HelperClearTestSuite) TestGetToken_ExpiredRefreshToken() {
 	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (s *HelperClearTestSuite) TestClearState_FileDoesNotExist() {
+func (s *HelperClearTestSuite) TestClearStateFileDoesNotExist() {
 	// Mock os.Stat to return an error indicating the file does not exist
 	originalStat := osStat
 	osStat = func(name string) (os.FileInfo, error) {
@@ -367,7 +367,7 @@ func (s *HelperClearTestSuite) TestClearState_FileDoesNotExist() {
 	s.Assert().NoError(err)
 }
 
-func (s *HelperClearTestSuite) TestClearState_ErrorCheckingFileExistence() {
+func (s *HelperClearTestSuite) TestClearStateErrorCheckingFileExistence() {
 
 	// delete file "tokenstore.json"
 	os.Remove("tokenstore.json")
@@ -376,7 +376,7 @@ func (s *HelperClearTestSuite) TestClearState_ErrorCheckingFileExistence() {
 	s.Assert().NoError(err)
 }
 
-func (s *HelperClearTestSuite) TestClearState_ErrorReadingFile() {
+func (s *HelperClearTestSuite) TestClearStateErrorReadingFile() {
 	// Mock os.Stat to indicate the file exists
 	originalStat := osStat
 	osStat = func(name string) (os.FileInfo, error) {
@@ -395,7 +395,7 @@ func (s *HelperClearTestSuite) TestClearState_ErrorReadingFile() {
 	s.Assert().NoError(err)
 }
 
-func (s *HelperClearTestSuite) TestClearState_Success() {
+func (s *HelperClearTestSuite) TestClearStateSuccess() {
 	// Mock os.Stat to indicate the file exists
 	originalStat := osStat
 	osStat = func(name string) (os.FileInfo, error) {
