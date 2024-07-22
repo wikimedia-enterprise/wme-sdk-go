@@ -174,7 +174,6 @@ type Helper struct {
 	Username  string
 	Password  string
 	TokenData *Tokenstore
-	apiMutex  sync.Mutex
 	API       API
 
 	fileMutex sync.Mutex
@@ -202,9 +201,6 @@ func NewHelper(api API) (*Helper, error) {
 
 // GetAccessToken manages the token state and returns a valid access token
 func (h *Helper) GetAccessToken() (string, error) {
-	h.apiMutex.Lock()
-	defer h.apiMutex.Unlock()
-
 	// Check if the tokenstore file exists
 	if _, err := os.Stat(tokenStoreFile); os.IsNotExist(err) {
 		// File does not exist, create and login
