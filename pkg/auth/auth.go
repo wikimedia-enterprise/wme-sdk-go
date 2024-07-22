@@ -174,8 +174,10 @@ type Helper struct {
 	Username  string
 	Password  string
 	TokenData *Tokenstore
-	mutex     sync.Mutex
+	apiMutex  sync.Mutex
 	API       API
+
+	fileMutex sync.Mutex
 }
 
 // NewHelper creates a new Helper instance
@@ -200,8 +202,8 @@ func NewHelper(api API) (*Helper, error) {
 
 // GetAccessToken manages the token state and returns a valid access token
 func (h *Helper) GetAccessToken() (string, error) {
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
+	h.apiMutex.Lock()
+	defer h.apiMutex.Unlock()
 
 	// Check if the tokenstore file exists
 	if _, err := os.Stat(tokenStoreFile); os.IsNotExist(err) {
@@ -296,14 +298,15 @@ func (h *Helper) storeTokens(tokenStoreFile string, tokenStore *Tokenstore) erro
 		return err
 	}
 
+	h.fileMutex.Lock()
+	defer h.fileMutex.Unlock()
+
 	//nolint:errcheck
 	return os.WriteFile(tokenStoreFile, data, 0600)
 }
 
 // ClearState clears the token state by revoking the refresh token and deleting the tokenstore file
 func (h *Helper) ClearState() error {
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
 
 	// Check if the file exists
 	if _, err := os.Stat(tokenStoreFile); err != nil {
