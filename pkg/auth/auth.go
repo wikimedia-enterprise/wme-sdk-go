@@ -5,9 +5,15 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"sync"
+	"time"
+
+	"github.com/joho/godotenv"
 )
 
 // LoginRequest parameters required for login request.
@@ -63,6 +69,8 @@ type API interface {
 	TokenRefresher
 	TokenRevoker
 }
+
+var tokenStoreFile = "tokenstore.json"
 
 // NewClient create new http client for WME authentication.
 func NewClient() API {
@@ -152,4 +160,179 @@ func (c *Client) RefreshToken(ctx context.Context, req *RefreshTokenRequest) (*R
 func (c *Client) RevokeToken(ctx context.Context, req *RevokeTokenRequest) error {
 	_, err := c.post(ctx, "/token-revoke", req)
 	return err
+}
+
+type Tokenstore struct {
+	AccessToken             string    `json:"access_token"`
+	AccessTokenGeneratedAt  time.Time `json:"access_token_generated_at"`
+	RefreshToken            string    `json:"refresh_token"`
+	RefreshTokenGeneratedAt time.Time `json:"refresh_token_generated_at"`
+}
+
+// Helper struct holds the username, password and token data
+type Helper struct {
+	Username  string
+	Password  string
+	TokenData *Tokenstore
+	API       API
+
+	fileMutex sync.Mutex
+}
+
+// NewHelper creates a new Helper instance
+func NewHelper(api API) (*Helper, error) {
+	err := godotenv.Load()
+	if err != nil {
+		return nil, fmt.Errorf("error loading .env file: %v", err)
+	}
+
+	username := os.Getenv("WME_USERNAME")
+	password := os.Getenv("WME_PASSWORD")
+	if username == "" || password == "" {
+		return nil, errors.New("username or password not set in .env file")
+	}
+
+	return &Helper{
+		Username: username,
+		Password: password,
+		API:      api,
+	}, nil
+}
+
+// GetAccessToken manages the token state and returns a valid access token
+func (h *Helper) GetAccessToken() (string, error) {
+	// Check if the tokenstore file exists
+	if _, err := os.Stat(tokenStoreFile); os.IsNotExist(err) {
+		// File does not exist, create and login
+		return h.loginAndStoreTokens(tokenStoreFile)
+	}
+
+	// File exists, read and unmarshal token data
+	data, err := os.ReadFile(tokenStoreFile)
+	if err != nil {
+		return "", err
+	}
+
+	var tokenStore Tokenstore
+	if err := json.Unmarshal(data, &tokenStore); err != nil {
+		return "", err
+	}
+
+	// Check if the access token is still valid
+	if time.Since(tokenStore.AccessTokenGeneratedAt) < 24*time.Hour {
+		return tokenStore.AccessToken, nil
+	}
+
+	// Check if the refresh token is still valid
+	if time.Since(tokenStore.RefreshTokenGeneratedAt) < 30*24*time.Hour {
+		return h.refreshAndStoreTokens(tokenStoreFile, &tokenStore)
+	}
+
+	// Both tokens are expired, login again
+	return h.loginAndStoreTokens(tokenStoreFile)
+}
+
+// loginAndStoreTokens logs in and stores the tokens
+func (h *Helper) loginAndStoreTokens(tokenStoreFile string) (string, error) {
+	loginRequest := &LoginRequest{
+		Username: h.Username,
+		Password: h.Password,
+	}
+
+	loginResponse, err := h.API.Login(context.Background(), loginRequest)
+	if err != nil {
+		return "", err
+	}
+
+	tokenStore := &Tokenstore{
+		AccessToken:             loginResponse.AccessToken,
+		AccessTokenGeneratedAt:  time.Now(),
+		RefreshToken:            loginResponse.RefreshToken,
+		RefreshTokenGeneratedAt: time.Now(),
+	}
+
+	if err := h.storeTokens(tokenStoreFile, tokenStore); err != nil {
+		return "", err
+	}
+
+	return tokenStore.AccessToken, nil
+}
+
+// refreshAndStoreTokens refreshes the access token and stores the new tokens
+func (h *Helper) refreshAndStoreTokens(tokenStoreFile string, tokenStore *Tokenstore) (string, error) {
+	refreshRequest := &RefreshTokenRequest{
+		Username:     h.Username,
+		RefreshToken: tokenStore.RefreshToken,
+	}
+
+	refreshResponse, err := h.API.RefreshToken(context.Background(), refreshRequest)
+	if err != nil {
+		return "", err
+	}
+
+	tokenStore.AccessToken = refreshResponse.AccessToken
+	tokenStore.AccessTokenGeneratedAt = time.Now()
+
+	if err := h.storeTokens(tokenStoreFile, tokenStore); err != nil {
+		return "", err
+	}
+
+	return tokenStore.AccessToken, nil
+}
+
+// storeTokens writes the token data to the tokenstore file in json
+func (h *Helper) storeTokens(tokenStoreFile string, tokenStore *Tokenstore) error {
+	data, err := json.Marshal(tokenStore)
+	if err != nil {
+		return err
+	}
+
+	h.fileMutex.Lock()
+	defer h.fileMutex.Unlock()
+
+	//nolint:errcheck
+	return os.WriteFile(tokenStoreFile, data, 0600)
+}
+
+// ClearState clears the token state by revoking the refresh token and deleting the tokenstore file
+func (h *Helper) ClearState() error {
+
+	// Check if the file exists
+	if _, err := os.Stat(tokenStoreFile); err != nil {
+		if os.IsNotExist(err) {
+			// File does not exist, nothing to clear
+			return nil
+		}
+		// Some other error occurred when checking the file
+		return err
+	}
+
+	// Read the file
+	data, err := os.ReadFile(tokenStoreFile)
+	if err != nil {
+		return err
+	}
+
+	// Unmarshal the token store
+	var tokenStore Tokenstore
+	if err := json.Unmarshal(data, &tokenStore); err != nil {
+		return err
+	}
+
+	// Revoke the refresh token if it exists
+	if tokenStore.RefreshToken != "" {
+		revokeRequest := &RevokeTokenRequest{
+			RefreshToken: tokenStore.RefreshToken,
+		}
+		if err := h.API.RevokeToken(context.Background(), revokeRequest); err != nil {
+			return err
+		}
+	}
+
+	// Remove the token store file
+	if err := os.Remove(tokenStoreFile); err != nil {
+		return err
+	}
+
+	return nil
 }
