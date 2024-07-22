@@ -62,7 +62,7 @@ The `auth` package provides a client and helper for managing authentication toke
 
 ### Helper Methods
 
-- `GetToken() (string, error)`: Manages the token state and returns a valid access token.
+- `GetAccessToken() (string, error)`: Manages the token state and returns a valid access token.
 - `loginAndStoreTokens(tokenStoreFile string) (string, error)`: Logs in and stores the tokens.
 - `refreshAndStoreTokens(tokenStoreFile string, tokenStore *Tokenstore) (string, error)`: Refreshes the access token and stores the new tokens.
 - `storeTokens(tokenStoreFile string, tokenStore *Tokenstore) error`: Writes the token data to the tokenstore file in JSON format.

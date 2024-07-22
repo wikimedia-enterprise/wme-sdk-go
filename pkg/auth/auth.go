@@ -269,14 +269,7 @@ func (h *Helper) refreshAndStoreTokens(tokenStoreFile string, tokenStore *Tokens
 		RefreshToken: tokenStore.RefreshToken,
 	}
 
-	var refreshResponse *RefreshTokenResponse
-	var err error
-
-	// Check if the refresh token is less than 30 days old
-	if time.Since(tokenStore.RefreshTokenGeneratedAt) < 30*24*time.Hour {
-		refreshResponse, err = h.API.RefreshToken(context.Background(), refreshRequest)
-	}
-
+	refreshResponse, err := h.API.RefreshToken(context.Background(), refreshRequest)
 	if err != nil {
 		return "", err
 	}

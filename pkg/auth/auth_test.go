@@ -279,7 +279,7 @@ func (s *HelperClearTestSuite) TestGetNewToken() {
 	s.mockAPI.AssertExpectations(s.T())
 }
 
-func (s *HelperClearTestSuite) TestGetTokenExisting() {
+func (s *HelperClearTestSuite) TestGetAccessTokenExisting() {
 	tokenStore := &auth.Tokenstore{
 		AccessToken:             "existing_access_token",
 		AccessTokenGeneratedAt:  time.Now(),
