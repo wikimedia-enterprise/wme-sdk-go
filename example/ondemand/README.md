@@ -21,7 +21,7 @@ with request parameter:
 Note: Max allowed limit is 10. Default limit is 3.
 
 <details>
-<summary>Response:</summary> 
+<summary>Response:</summary>
 
 ```json
 [
@@ -1354,7 +1354,9 @@ with request parameter:
 }
 ```
 
-Response:
+<details>
+<summary>Response:</summary>
+
 ```json
 [
     {
@@ -1460,6 +1462,7 @@ Response:
     }
 ]
 ```
+</details>
 
 iii) Narrow down to one project, namespace.
 

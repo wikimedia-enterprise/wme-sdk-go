@@ -18,9 +18,8 @@ POST https://api.enterprise.wikimedia.com/batches/2024-03-03
 ```
 
 
-
 <details>
-<summary>Response:</summary> 
+<summary>Response:</summary>
 
 ```json
 [

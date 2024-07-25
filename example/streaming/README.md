@@ -33,7 +33,8 @@ with request parameters:
 }
 ```
 
-Response:
+<details>
+<summary>Response:</summary>
 
 ```bash
 .
@@ -54,6 +55,7 @@ Response:
 .
 
 ```
+</details>
 
 ## Parallel connection
 Here are the query parameters that the API supports:

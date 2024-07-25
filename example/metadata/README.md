@@ -12,7 +12,9 @@ i) Without any parameters. Returns all the project codes.
 GET https://api.enterprise.wikimedia.com/v2/codes
 ```
 
-Response: 
+<details>
+<summary>Response:</summary>
+
 ```json
 [
     {
@@ -52,6 +54,7 @@ Response:
     }
 ]
 ```
+</details>
 
 ii) Selet fields that you want to see.
 
@@ -68,7 +71,9 @@ with request parameter
 }
 ```
 
-Response:
+<details>
+<summary>Response:</summary>
+
 ```json
 [
     {
@@ -94,6 +99,7 @@ Response:
     }
 ]
 ```
+</details>
 
 iii) With filters and field selection
 
@@ -2237,7 +2243,7 @@ GET https://api.enterprise.wikimedia.com/v2/projects
 ```
 
 <details>
-<summary>Response: </summary>
+<summary>Response:</summary>
 
 ```json
 [
@@ -10281,7 +10287,9 @@ Get information on all the supported namespaces. Supports filtering and field se
 GET https://api.enterprise.wikimedia.com/v2/namespaces
 ```
 
-Response:
+<details>
+<summary>Response:</summary>
+
 ```json
 [
     {
@@ -10306,3 +10314,4 @@ Response:
     }
 ]
 ```
+</details>

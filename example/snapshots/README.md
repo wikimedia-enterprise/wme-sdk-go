@@ -18,7 +18,7 @@ POST https://api.enterprise.wikimedia.com/v2/snapshots
 
 
 <details>
-<summary>Response:</summary> 
+<summary>Response:</summary>
 
 ```json
 [
@@ -213,7 +213,7 @@ with request parameters:
 
 
 <details>
-<summary>Response:</summary> 
+<summary>Response:</summary>
 
 ```json
 [
@@ -785,7 +785,9 @@ iii) Get metadata on a single snapshot.
 POST https://api.enterprise.wikimedia.com/v2/snapshots/enwiki_namespace_0
 ```
 
-Response:
+<details>
+<summary>Response:</summary>
+
 ```json
 {
     "identifier": "enwiki_namespace_0",
@@ -806,6 +808,7 @@ Response:
     }
 }
 ```
+</details>
 
 iv) Get header information (last modified, content-length, etc.) on a single snapshot. 
 
