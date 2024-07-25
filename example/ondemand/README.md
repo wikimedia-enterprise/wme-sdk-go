@@ -20,7 +20,7 @@ with request parameter:
 ```
 Note: Max allowed limit is 10. Default limit is 3.
 
-<detail>
+<details>
 <summary>Response:</summary> 
 
 ```json
@@ -1328,7 +1328,7 @@ Note: Max allowed limit is 10. Default limit is 3.
   
 ]
 ```
-</detail>
+</details>
 
 ii) Get all articles from english language projects with selected fields
 
@@ -1484,7 +1484,7 @@ with request parameter:
 }
 ```
 
-<detail>
+<details>
 <summary>Response:</summary>
 
 ```json
@@ -2374,4 +2374,4 @@ with request parameter:
     }
 ]
 ```
-</detail>
+</details>

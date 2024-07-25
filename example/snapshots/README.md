@@ -17,7 +17,7 @@ POST https://api.enterprise.wikimedia.com/v2/snapshots
 
 
 
-<detail>
+<details>
 <summary>Response:</summary> 
 
 ```json
@@ -189,7 +189,7 @@ POST https://api.enterprise.wikimedia.com/v2/snapshots
     .
 ]
 ```
-</detail>
+</details>
 
 
 ii) Get metadata of all the available snapshots for English language. 
@@ -212,7 +212,7 @@ with request parameters:
 
 
 
-<detail>
+<details>
 <summary>Response:</summary> 
 
 ```json
@@ -777,7 +777,7 @@ with request parameters:
     }
 ]
 ```
-</detail>
+</details>
 
 iii) Get metadata on a single snapshot. 
 

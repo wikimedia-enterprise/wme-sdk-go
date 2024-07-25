@@ -19,7 +19,7 @@ POST https://api.enterprise.wikimedia.com/batches/2024-03-03
 
 
 
-<detail>
+<details>
 <summary>Response:</summary> 
 
 ```json
@@ -83,7 +83,7 @@ POST https://api.enterprise.wikimedia.com/batches/2024-03-03
     .
 ]
 ```
-</detail>
+</details>
 
 
 ii) Get metadata of all the available batches for English language for a day.
