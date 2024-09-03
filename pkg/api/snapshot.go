@@ -24,4 +24,7 @@ type Snapshot struct {
 
 	// Size of the snapshot.
 	Size *Size `json:"size,omitempty"`
+
+	// Chunks parts available as chunks for snapshot.
+	Chunks []string `json:"chunks,omitempty"`
 }

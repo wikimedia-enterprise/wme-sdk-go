@@ -184,6 +184,31 @@ type AccessTokenSetter interface {
 	SetAccessToken(tkn string)
 }
 
+// ChunksGetter is an interface for getting multiple snapshot chunks by snapshot ID.
+type ChunksGetter interface {
+	GetChunks(ctx context.Context, sid string, req *Request) ([]*Snapshot, error)
+}
+
+// ChunkGetter is an interface for getting a single chunk by ID.
+type ChunkGetter interface {
+	GetChunk(ctx context.Context, sid string, idr string, req *Request) (*Snapshot, error)
+}
+
+// ChunksHeader is an interface for getting the headers of a single chunk by ID.
+type ChunksHeader interface {
+	HeadChunk(ctx context.Context, sid string, idr string) (*Headers, error)
+}
+
+// ChunksDownloader is an interface for downloading a single chunk by ID to a writer.
+type ChunksDownloader interface {
+	DownloadChunk(ctx context.Context, sid string, idr string, wsk io.WriteSeeker) error
+}
+
+// ChunksReader is an interface for reading the contents of a single chunk by ID with a callback function.
+type ChunksReader interface {
+	ReadChunk(ctx context.Context, sid string, idr string, cbk ReadCallback) error
+}
+
 // API interface tha encapsulates the whole functionality of the client.
 // Can be used with composition in unit testing.
 type API interface {
@@ -207,6 +232,11 @@ type API interface {
 	SnapshotHeader
 	SnapshotReader
 	SnapshotDownloader
+	ChunksGetter
+	ChunkGetter
+	ChunksHeader
+	ChunksDownloader
+	ChunksReader
 	ArticlesGetter
 	StructuredContentsGetter
 	ArticlesStreamer
@@ -671,6 +701,33 @@ func (c *Client) ReadSnapshot(ctx context.Context, idr string, cbk ReadCallback)
 // DownloadSnapshot downloads the contents of a single snapshot for a specific ID, and writes the data to the specified WriteSeeker.
 func (c *Client) DownloadSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error {
 	return c.downloadEntity(ctx, fmt.Sprintf("snapshots/%s/download", idr), wsk)
+}
+
+// GetChunks retrieves a list of all snapshot chunks and returns an error if any.
+func (c *Client) GetChunks(ctx context.Context, sid string, req *Request) ([]*Snapshot, error) {
+	sps := []*Snapshot{}
+	return sps, c.getEntity(ctx, req, fmt.Sprintf("snapshots/%s/chunks", sid), &sps)
+}
+
+// GetChunk retrieves a single snapshot chunk for a specific ID and returns an error if any.
+func (c *Client) GetChunk(ctx context.Context, sid string, idr string, req *Request) (*Snapshot, error) {
+	snp := new(Snapshot)
+	return snp, c.getEntity(ctx, req, fmt.Sprintf("snapshots/%s/chunks/%s", sid, idr), snp)
+}
+
+// HeadChunk retrieves only the headers of a single snapshot chunk for a specific ID, and returns an error if any.
+func (c *Client) HeadChunk(ctx context.Context, sid string, idr string) (*Headers, error) {
+	return c.headEntity(ctx, fmt.Sprintf("snapshots/%s/chunks/%s/download", sid, idr))
+}
+
+// ReadChunk reads the contents of a single snapshot chunk for a specific ID, and invokes the specified callback function for each chunk read.
+func (c *Client) ReadChunk(ctx context.Context, sid string, idr string, cbk ReadCallback) error {
+	return c.readEntity(ctx, fmt.Sprintf("snapshots/%s/chunks/%s/download", sid, idr), cbk)
+}
+
+// DownloadChunk downloads the contents of a single snapshot chunk for a specific ID, and writes the data to the specified WriteSeeker.
+func (c *Client) DownloadChunk(ctx context.Context, sid string, idr string, wsk io.WriteSeeker) error {
+	return c.downloadEntity(ctx, fmt.Sprintf("snapshots/%s/chunks/%s/download", sid, idr), wsk)
 }
 
 // GetArticles retrieves articles from the API based on the given name and request parameters.

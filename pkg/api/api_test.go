@@ -1068,6 +1068,252 @@ func TestReadSnapshot(t *testing.T) {
 	}
 }
 
+type getChunksTestSuite struct {
+	baseEntityTestSuite
+	sid string
+}
+
+func (s *getChunksTestSuite) SetupSuite() {
+	s.pth = "snapshots/simplewiki_namespace_0/chunks"
+	s.sid = "simplewiki_namespace_0"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getChunksTestSuite) TestGetChunks() {
+	sps, err := s.clt.GetChunks(s.ctx, s.sid, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(sps)
+		s.Error(err)
+	} else {
+		s.NotEmpty(sps)
+		s.NoError(err)
+		s.Len(sps, 7)
+	}
+}
+
+func TestGetChunks(t *testing.T) {
+	for _, tcs := range []*getChunksTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/chunks.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *getChunkTestSuite) SetupSuite() {
+	s.sid = "simplewiki_namespace_0"
+	s.idr = "simplewiki_namespace_0_chunk_0"
+	s.pth = fmt.Sprintf("snapshots/%s/chunks/%s", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getChunkTestSuite) TestGetChunk() {
+	spt, err := s.clt.GetChunk(s.ctx, s.sid, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(spt.Identifier)
+		s.Empty(spt.Version)
+		s.Empty(spt.DateModified)
+		s.Empty(spt.IsPartOf)
+		s.Empty(spt.InLanguage)
+		s.Nil(spt.Namespace)
+		s.Empty(spt.Size)
+		s.Error(err)
+	} else {
+		s.NotEmpty(spt.Identifier)
+		s.NotEmpty(spt.Version)
+		s.NotEmpty(spt.DateModified)
+		s.NotEmpty(spt.IsPartOf)
+		s.NotEmpty(spt.InLanguage)
+		s.NotNil(spt.Namespace)
+		s.NotEmpty(spt.Size)
+		s.NoError(err)
+	}
+}
+
+func TestGetChunk(t *testing.T) {
+	for _, tcs := range []*getChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/chunk.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headChunksTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *headChunksTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.sid = "simplewiki_namespace_0_chunk_0"
+	s.pth = fmt.Sprintf("snapshots/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headChunksTestSuite) TestHeadChunk() {
+	shs, err := s.clt.HeadChunk(s.ctx, s.sid, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(shs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(shs)
+		s.NotEmpty(shs.ContentLength)
+		s.NotEmpty(shs.ContentType)
+		s.NotEmpty(shs.ETag)
+		s.NotEmpty(shs.LastModified)
+		s.NoError(err)
+	}
+}
+
+func TestHeadChunk(t *testing.T) {
+	for _, tcs := range []*headChunksTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *downloadChunkTestSuite) SetupSuite() {
+	s.sid = "simplewiki_namespace_0"
+	s.idr = "simplewiki_namespace_0_chunk_0"
+	s.pth = fmt.Sprintf("snapshots/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadChunkTestSuite) TestDownloadChunk() {
+	tmf, err := os.CreateTemp("", "spt_tmp.tar.gz")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer tmf.Close()
+	err = s.clt.DownloadChunk(s.ctx, s.sid, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadChunk(t *testing.T) {
+	for _, tcs := range []*downloadChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0_chunk_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type readChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *readChunkTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.sid = "simplewiki_namespace_0_chunk_0"
+	s.pth = fmt.Sprintf("snapshots/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readChunkTestSuite) TestReadChunk() {
+	nmc := 0
+	err := s.clt.ReadChunk(s.ctx, s.sid, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadChunk(t *testing.T) {
+	for _, tcs := range []*readChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type getArticlesTestSuite struct {
 	baseEntityTestSuite
 	nme string

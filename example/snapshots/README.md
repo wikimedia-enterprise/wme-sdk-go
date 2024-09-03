@@ -1,21 +1,18 @@
 # Snapshots API examples
+
 A snapshot is a bundles of all articles in their latest revision/version from a supported project-namespace. These APIs provide information on the available snapshots, their metadata, and allow to download them.
 Snapshots for each project-namespace are updated monthly (for free tier users) and daily for non-free tier.
-Allows filtering and field selection when fetching snapshots metadata. 
+Allows filtering and field selection when fetching snapshots metadata.
 Allows parallel downloading using [Range headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range).
 Refer to the documentation [here](https://enterprise.wikimedia.com/docs/snapshot/).
 The articles included in the snapshots follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/article.go) schema.
 The snapshot metadata follow [this](https://gitlab.wikimedia.org/repos/wme/wikimedia-enterprise/-/blob/main/general/schema/snapshot.go) schema.
 
-
-
-i) Get metadata of all the available snapshots. There should be one snapshot for each supported project-namespace. 
+i) Get metadata of all the available snapshots. There should be one snapshot for each supported project-namespace.
 
 ```bash
 POST https://api.enterprise.wikimedia.com/v2/snapshots
 ```
-
-
 
 <details>
 <summary>Response:</summary>
@@ -189,16 +186,17 @@ POST https://api.enterprise.wikimedia.com/v2/snapshots
     .
 ]
 ```
+
 </details>
 
-
-ii) Get metadata of all the available snapshots for English language. 
+ii) Get metadata of all the available snapshots for English language.
 
 ```bash
 POST https://api.enterprise.wikimedia.com/v2/snapshots
 ```
 
 with request parameters:
+
 ```json
 {
     "filters": [
@@ -209,8 +207,6 @@ with request parameters:
     ]
 }
 ```
-
-
 
 <details>
 <summary>Response:</summary>
@@ -777,9 +773,10 @@ with request parameters:
     }
 ]
 ```
+
 </details>
 
-iii) Get metadata on a single snapshot. 
+iii) Get metadata on a single snapshot.
 
 ```bash
 POST https://api.enterprise.wikimedia.com/v2/snapshots/enwiki_namespace_0
@@ -808,9 +805,10 @@ POST https://api.enterprise.wikimedia.com/v2/snapshots/enwiki_namespace_0
     }
 }
 ```
+
 </details>
 
-iv) Get header information (last modified, content-length, etc.) on a single snapshot. 
+iv) Get header information (last modified, content-length, etc.) on a single snapshot.
 
 ```bash
 HEAD https://api.enterprise.wikimedia.com/v2/snapshots/afwikibooks_namespace_0/download
@@ -821,8 +819,6 @@ Response headers:
 
 Here, the size (content length) is 215077 bytes.
 
-
-
 v) Download a snapshot. You can parallel download using `Range` header.
 
 ```bash
@@ -830,6 +826,7 @@ GET https://api.enterprise.wikimedia.com/v2/snapshots/afwikibooks_namespace_0/do
 ```
 
 with header:
+
 ```json
 {
     "Range": "bytes=0-99000"
@@ -841,9 +838,69 @@ GET https://api.enterprise.wikimedia.com/v2/snapshots/afwikibooks_namespace_0/do
 ```
 
 with header:
+
 ```json
 {
     "Range": "bytes=99001-215077"
 }
 ```
 
+
+## Chunks
+
+Get All chunks:
+
+```
+GET https://api.enterprise.wikimedia.com/v2/snapshots/hiwiki_namespace_0
+
+{
+    "identifier": "hiwiki_namespace_0",
+    "version": "7905d6e5bcf9714a467353aa2527fe12",
+    "date_modified": "2024-08-30T00:02:34.395793938Z",
+    "is_part_of": {
+        "identifier": "hiwiki"
+    },
+    "in_language": {
+        "identifier": "hi"
+    },
+    "namespace": {
+        "identifier": 0
+    },
+    "size": {
+        "value": 769.714e0,
+        "unit_text": "MB"
+    },
+    "chunks": [
+        "hiwiki_namespace_0_chunk_0",
+        "hiwiki_namespace_0_chunk_1",
+        "hiwiki_namespace_0_chunk_2"
+    ]
+}
+```
+
+
+acess a chunk information:
+
+```
+GET https://api.enterprise.wikimedia.com/v2/snapshots/hiwiki_namespace_0/chunks/1
+
+
+{
+    "identifier": "hiwiki_namespace_0_chunk_1",
+    "version": "6fbc6bf3fce195b356dfe44af7fbb540",
+    "date_modified": "2024-08-30T00:02:16.265448519Z",
+    "is_part_of": {
+        "identifier": "hiwiki"
+    },
+    "in_language": {
+        "identifier": "hi"
+    },
+    "namespace": {
+        "identifier": 0
+    },
+    "size": {
+        "value": 276.067712e0,
+        "unit_text": "MB"
+    }
+}
+```
