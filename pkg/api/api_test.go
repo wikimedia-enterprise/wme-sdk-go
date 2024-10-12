@@ -1412,6 +1412,251 @@ func TestGetStructuredContents(t *testing.T) {
 	}
 }
 
+type GetStructuredSnapshotsTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *GetStructuredSnapshotsTestSuite) SetupSuite() {
+	s.pth = "snapshots/structured-contents/"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *GetStructuredSnapshotsTestSuite) TestGetStructuredSnapshots() {
+	sps, err := s.clt.GetStructuredSnapshots(s.ctx, s.req)
+
+	for _, spt := range sps {
+		s.NotEmpty(spt.Identifier)
+		s.NotEmpty(spt.Version)
+		s.NotEmpty(spt.DateModified)
+		s.NotEmpty(spt.IsPartOf)
+		s.NotEmpty(spt.InLanguage)
+		s.NotNil(spt.Namespace)
+		s.NotEmpty(spt.Size)
+	}
+
+	if s.sts != http.StatusOK {
+		s.Empty(sps)
+		s.Error(err)
+	} else {
+		s.NotEmpty(sps)
+		s.NoError(err)
+	}
+}
+
+func TestGetStructuredSnapshots(t *testing.T) {
+	for _, tcs := range []*GetStructuredSnapshotsTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/structured-contents-snapshots.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getStructuredSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getStructuredSnapshotTestSuite) SetupSuite() {
+	s.idr = "enwiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/structured-contents/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getStructuredSnapshotTestSuite) TestGetStructuredSnapshot() {
+	spt, err := s.clt.GetStructuredSnapshot(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(spt.Identifier)
+		s.Empty(spt.Version)
+		s.Empty(spt.DateModified)
+		s.Empty(spt.IsPartOf)
+		s.Empty(spt.InLanguage)
+		s.Nil(spt.Namespace)
+		s.Empty(spt.Size)
+		s.Error(err)
+	} else {
+		s.NotEmpty(spt.Identifier)
+		s.NotEmpty(spt.Version)
+		s.NotEmpty(spt.DateModified)
+		s.NotEmpty(spt.IsPartOf)
+		s.NotEmpty(spt.InLanguage)
+		s.NotNil(spt.Namespace)
+		s.NotEmpty(spt.Size)
+		s.NoError(err)
+	}
+}
+
+func TestGetStructuredSnapshot(t *testing.T) {
+	for _, tcs := range []*getStructuredSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/structured-contents-snapshot.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headStructuredSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *headStructuredSnapshotTestSuite) SetupSuite() {
+	s.idr = "enwiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/structured-contents/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headStructuredSnapshotTestSuite) TestHeadStructuredSnapshot() {
+	shs, err := s.clt.HeadStructuredSnapshot(s.ctx, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(shs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(shs)
+		s.NotEmpty(shs.ContentLength)
+		s.NotEmpty(shs.ContentType)
+		s.NotEmpty(shs.ETag)
+		s.NotEmpty(shs.LastModified)
+		s.NoError(err)
+	}
+}
+
+func TestHeadStructuredSnapshot(t *testing.T) {
+	for _, tcs := range []*headStructuredSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadStructuredSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *downloadStructuredSnapshotTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/structured-contents/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadStructuredSnapshotTestSuite) TestDownloadStructuredSnapshot() {
+	tmf, err := os.CreateTemp("", "spt_tmp.tar.gz")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer tmf.Close()
+	err = s.clt.DownloadStructuredSnapshot(s.ctx, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadStructuredSnapshot(t *testing.T) {
+	for _, tcs := range []*downloadStructuredSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type readStructuredSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *readStructuredSnapshotTestSuite) SetupSuite() {
+	s.idr = "simplewiki_namespace_0"
+	s.pth = fmt.Sprintf("snapshots/structured-contents/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readStructuredSnapshotTestSuite) TestReadStructuredSnapshot() {
+	nmc := 0
+	err := s.clt.ReadStructuredSnapshot(s.ctx, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadStructuredSnapshot(t *testing.T) {
+	for _, tcs := range []*readStructuredSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
 type streamArticlesTestSuite struct {
 	baseEntityTestSuite
 }

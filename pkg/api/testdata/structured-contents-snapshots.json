@@ -1,0 +1,110 @@
+[
+    {
+        "identifier": "dewiki_namespace_0",
+        "version": "fd7ac8d6b4d917d1f8d9185b14454705",
+        "date_modified": "2024-09-23T00:44:46.097407365Z",
+        "is_part_of": {
+            "identifier": "dewiki"
+        },
+        "in_language": {
+            "identifier": "de"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 2567.015e0,
+            "unit_text": "MB"
+        }
+    },
+    {
+        "identifier": "enwiki_namespace_0",
+        "version": "aabf49b70dabd809272293e5a9f2d589",
+        "date_modified": "2024-10-12T00:34:58.163473679Z",
+        "is_part_of": {
+            "identifier": "enwiki"
+        },
+        "in_language": {
+            "identifier": "en"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 11031.334e0,
+            "unit_text": "MB"
+        }
+    },
+    {
+        "identifier": "eswiki_namespace_0",
+        "version": "5672b255aa99661fb38d1e4288abe927",
+        "date_modified": "2024-09-23T00:50:47.983089521Z",
+        "is_part_of": {
+            "identifier": "eswiki"
+        },
+        "in_language": {
+            "identifier": "es"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 1915.143e0,
+            "unit_text": "MB"
+        }
+    },
+    {
+        "identifier": "frwiki_namespace_0",
+        "version": "0d09543c08e3f988dfc1868411870953",
+        "date_modified": "2024-09-23T01:08:31.268437146Z",
+        "is_part_of": {
+            "identifier": "frwiki"
+        },
+        "in_language": {
+            "identifier": "fr"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 2953.023e0,
+            "unit_text": "MB"
+        }
+    },
+    {
+        "identifier": "itwiki_namespace_0",
+        "version": "9e057ec37f5026cd8aec14e48898a9d8",
+        "date_modified": "2024-09-23T00:56:17.206621008Z",
+        "is_part_of": {
+            "identifier": "itwiki"
+        },
+        "in_language": {
+            "identifier": "it"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 1638.477e0,
+            "unit_text": "MB"
+        }
+    },
+    {
+        "identifier": "ptwiki_namespace_0",
+        "version": "7b6d4c080df6e3cd7ee42466bcde43f2",
+        "date_modified": "2024-10-10T00:01:05.482710521Z",
+        "is_part_of": {
+            "identifier": "ptwiki"
+        },
+        "in_language": {
+            "identifier": "pt"
+        },
+        "namespace": {
+            "identifier": 0
+        },
+        "size": {
+            "value": 43.391e0,
+            "unit_text": "MB"
+        }
+    }
+]

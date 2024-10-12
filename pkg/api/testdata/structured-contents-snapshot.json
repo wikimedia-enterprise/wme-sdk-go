@@ -1,0 +1,18 @@
+{
+    "identifier": "enwiki_namespace_0",
+    "version": "aabf49b70dabd809272293e5a9f2d589",
+    "date_modified": "2024-10-12T00:34:58.163473679Z",
+    "is_part_of": {
+        "identifier": "enwiki"
+    },
+    "in_language": {
+        "identifier": "en"
+    },
+    "namespace": {
+        "identifier": 0
+    },
+    "size": {
+        "value": 11031.334e0,
+        "unit_text": "MB"
+    }
+}

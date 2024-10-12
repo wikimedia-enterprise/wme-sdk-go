@@ -50,6 +50,29 @@ type StructuredContent struct {
 	Image *Image `json:"image,omitempty"`
 }
 
+type StructuredContentSnapshot struct {
+	// Identifier is the unique identifier for the structured content snapshot.
+	Identifier string `json:"identifier,omitempty"`
+
+	// Version of the structured content snapshot as a md5 checksum.
+	Version string `json:"version,omitempty"`
+
+	// DateModified date and time the structured content snapshot was last modified.
+	DateModified *time.Time `json:"date_modified,omitempty"`
+
+	// IsPartOf the project that this structured content snapshot belongs to.
+	IsPartOf *Project `json:"is_part_of,omitempty"`
+
+	// InLanguage the language of the contents of the structured content snapshot.
+	InLanguage *Language `json:"in_language,omitempty"`
+
+	// Namespace of the structured content snapshot.
+	Namespace *Namespace `json:"namespace,omitempty"`
+
+	// Size of the structured content snapshot.
+	Size *Size `json:"size,omitempty"`
+}
+
 // Part represents a part of a structured content (section, field etc.).
 type Part struct {
 	// Name is the name of the part.

@@ -209,6 +209,31 @@ type ChunksReader interface {
 	ReadChunk(ctx context.Context, sid string, idr string, cbk ReadCallback) error
 }
 
+// StructuredSnapshotsGetter is an interface for getting multiple structured content snapshots.
+type StructuredSnapshotsGetter interface {
+	GetStructuredSnapshots(ctx context.Context, req *Request) ([]*StructuredContentSnapshot, error)
+}
+
+// StructuredSnapshotGetter is an interface for getting a single structured content snapshot by ID.
+type StructuredSnapshotGetter interface {
+	GetStructuredSnapshot(ctx context.Context, idr string, req *Request) (*StructuredContentSnapshot, error)
+}
+
+// StructuredSnapshotHeader is an interface for getting the headers of a single structured content snapshot by ID.
+type StructuredSnapshotHeader interface {
+	HeadStructuredSnapshot(ctx context.Context, idr string) (*Headers, error)
+}
+
+// StructuredSnapshotReader is an interface for reading the contents of a single structured content snapshot by ID with a callback function.
+type StructuredSnapshotReader interface {
+	ReadStructuredSnapshot(ctx context.Context, idr string, cbk ReadCallback) error
+}
+
+// StructuredSnapshotDownloader is an interface for downloading a single structured content snapshot by ID to a writer.
+type StructuredSnapshotDownloader interface {
+	DownloadStructuredSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error
+}
+
 // API interface tha encapsulates the whole functionality of the client.
 // Can be used with composition in unit testing.
 type API interface {
@@ -239,6 +264,11 @@ type API interface {
 	ChunksReader
 	ArticlesGetter
 	StructuredContentsGetter
+	StructuredSnapshotsGetter
+	StructuredSnapshotGetter
+	StructuredSnapshotHeader
+	StructuredSnapshotReader
+	StructuredSnapshotDownloader
 	ArticlesStreamer
 }
 
@@ -740,6 +770,33 @@ func (c *Client) GetArticles(ctx context.Context, nme string, req *Request) ([]*
 func (c *Client) GetStructuredContents(ctx context.Context, nme string, req *Request) ([]*StructuredContent, error) {
 	ats := []*StructuredContent{}
 	return ats, c.getEntity(ctx, req, fmt.Sprintf("structured-contents/%s", nme), &ats)
+}
+
+// GetStructuredSnapshots retrieves a list of all snapshots and returns an error if any.
+func (c *Client) GetStructuredSnapshots(ctx context.Context, req *Request) ([]*StructuredContentSnapshot, error) {
+	sps := []*StructuredContentSnapshot{}
+	return sps, c.getEntity(ctx, req, "snapshots/structured-contents/", &sps)
+}
+
+// GetStructuredSnapshot retrieves a single snapshot for a specific ID and returns an error if any.
+func (c *Client) GetStructuredSnapshot(ctx context.Context, idr string, req *Request) (*StructuredContentSnapshot, error) {
+	snp := new(StructuredContentSnapshot)
+	return snp, c.getEntity(ctx, req, fmt.Sprintf("snapshots/structured-contents/%s", idr), snp)
+}
+
+// HeadStructuredSnapshot retrieves only the headers of a single snapshot for a specific ID, and returns an error if any.
+func (c *Client) HeadStructuredSnapshot(ctx context.Context, idr string) (*Headers, error) {
+	return c.headEntity(ctx, fmt.Sprintf("snapshots/structured-contents/%s/download", idr))
+}
+
+// ReadStructuredSnapshot reads the contents of a single snapshots for a specific ID, and invokes the specified callback function for each chunk read.
+func (c *Client) ReadStructuredSnapshot(ctx context.Context, idr string, cbk ReadCallback) error {
+	return c.readEntity(ctx, fmt.Sprintf("snapshots/structured-contents/%s/download", idr), cbk)
+}
+
+// DownloadStructuredSnapshot downloads the contents of a single snapshot for a specific ID, and writes the data to the specified WriteSeeker.
+func (c *Client) DownloadStructuredSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error {
+	return c.downloadEntity(ctx, fmt.Sprintf("snapshots/structured-contents/%s/download", idr), wsk)
 }
 
 // StreamArticles streams all available articles from the server and applies a callback function to each article
