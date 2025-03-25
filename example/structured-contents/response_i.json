@@ -970,7 +970,7 @@
             "height": 217
         },
         "description": "Largest city in Quebec, Canada",
-        "infobox": [
+        "infoboxes": [
             {
                 "name": "Infobox settlement",
                 "type": "infobox",
@@ -5761,7 +5761,7 @@
             "height": 500
         },
         "description": "largest city in Quebec, Canada",
-        "infobox": [
+        "infoboxes": [
             {
                 "type": "infobox",
                 "has_parts": [

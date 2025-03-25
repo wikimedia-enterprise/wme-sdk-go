@@ -54,7 +54,7 @@
     "in_language": {
       "identifier": "ru"
     },
-    "infobox": [
+    "infoboxes": [
       {
         "name": "Карточка языка программирования\n",
         "type": "infobox",
@@ -314,7 +314,7 @@
       "width": 600,
       "height": 600
     },
-    "infobox": [
+    "infoboxes": [
       {
         "name": "Pp-semi-indef",
         "type": "infobox",
