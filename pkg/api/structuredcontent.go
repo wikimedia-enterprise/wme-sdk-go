@@ -40,14 +40,18 @@ type StructuredContent struct {
 	// InLanguage is the language of the structured content (article).
 	InLanguage *Language `json:"in_language,omitempty"`
 
-	// InfoBox are the parts included inside the structured content (article).
-	InfoBox []*Part `json:"infobox,omitempty"`
+	// InfoBoxes are the parts included inside the structured content (article).
+	InfoBoxes []*Part `json:"infoboxes,omitempty"`
 
 	// ArticleSections are the section parts included inside the structured content (article).
 	ArticleSections []*Part `json:"article_sections,omitempty"`
 
 	// Image specifies the image related to the structured content (article).
 	Image *Image `json:"image,omitempty"`
+
+	// Reference represents a structured source linked to citations,
+	// containing metadata and formatted text for verification.
+	References []*StructuredReference `json:"references,omitempty"`
 }
 
 type StructuredContentSnapshot struct {

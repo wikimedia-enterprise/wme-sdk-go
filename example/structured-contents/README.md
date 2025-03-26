@@ -44,7 +44,7 @@ with request parameter:
             "value": "enwiki"
         }
     ],
-    "fields": ["abstract", "article_sections", "infobox"]
+    "fields": ["abstract", "article_sections", "infoboxes"]
 }
 ```
 
