@@ -52,6 +52,8 @@ type StructuredContent struct {
 	// Reference represents a structured source linked to citations,
 	// containing metadata and formatted text for verification.
 	References []*StructuredReference `json:"references,omitempty"`
+
+	Tables []*StructuredTable `json:"tables,omitempty" avro:"tables"`
 }
 
 type StructuredContentSnapshot struct {
@@ -99,6 +101,12 @@ type Part struct {
 
 	// HasParts are the parts included inside the part (recursively parts can contain parts).
 	HasParts []*Part `json:"has_parts,omitempty"`
+
+	// Citations are the citations included inside the part.
+	Citations []*StructuredCitation `json:"citations,omitempty" avro:"citations"`
+
+	// TableReferences are the tables inside the part.
+	TableReferences []*StructuredTableRef `json:"table_references,omitempty" avro:"table_references"`
 }
 
 // Link represents a link that can be found on a Wikipedia page.
@@ -111,4 +119,15 @@ type Link struct {
 
 	// Images are the images included inside  the link.
 	Images []*Image `json:"images,omitempty"`
+}
+
+// StructuredTableRef represents a reference to a structured table,
+type StructuredTableRef struct {
+	// Identifier is a unique string that identifies the structured table.
+	Identifier string `json:"identifier,omitempty" avro:"identifier"`
+
+	// ConfidenceScore indicates the confidence (between 0.0 and 1.0)
+	// associated with this table reference. A higher score suggests
+	// a structured and well formed table.
+	ConfidenceScore *float64 `json:"confidence_score,omitempty" avro:"confidence_score"`
 }
