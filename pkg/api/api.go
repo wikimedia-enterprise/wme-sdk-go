@@ -234,6 +234,60 @@ type StructuredSnapshotDownloader interface {
 	DownloadStructuredSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error
 }
 
+// --- Wikidata Snapshots Interfaces ---
+
+type WikidataSnapshotsGetter interface {
+	GetWikidataSnapshots(ctx context.Context, req *Request) ([]*Snapshot, error)
+}
+type WikidataSnapshotGetter interface {
+	GetWikidataSnapshot(ctx context.Context, idr string, req *Request) (*Snapshot, error)
+}
+type WikidataSnapshotHeader interface {
+	HeadWikidataSnapshot(ctx context.Context, idr string) (*Headers, error)
+}
+type WikidataSnapshotReader interface {
+	ReadWikidataSnapshot(ctx context.Context, idr string, cbk ReadCallback) error
+}
+type WikidataSnapshotDownloader interface {
+	DownloadWikidataSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error
+}
+
+// --- Wikidata Chunks Interfaces ---
+
+type WikidataChunksGetter interface {
+	GetWikidataChunks(ctx context.Context, sid string, req *Request) ([]*Snapshot, error)
+}
+type WikidataChunkGetter interface {
+	GetWikidataChunk(ctx context.Context, sid string, idr string, req *Request) (*Snapshot, error)
+}
+type WikidataChunksHeader interface {
+	HeadWikidataChunk(ctx context.Context, sid string, idr string) (*Headers, error)
+}
+type WikidataChunksReader interface {
+	ReadWikidataChunk(ctx context.Context, sid string, idr string, cbk ReadCallback) error
+}
+type WikidataChunksDownloader interface {
+	DownloadWikidataChunk(ctx context.Context, sid string, idr string, wsk io.WriteSeeker) error
+}
+
+// --- Wikidata Batches Interfaces ---
+
+type WikidataBatchesGetter interface {
+	GetWikidataBatches(ctx context.Context, dte *time.Time, req *Request) ([]*Batch, error)
+}
+type WikidataBatchGetter interface {
+	GetWikidataBatch(ctx context.Context, dte *time.Time, idr string, req *Request) (*Batch, error)
+}
+type WikidataBatchHeader interface {
+	HeadWikidataBatch(ctx context.Context, dte *time.Time, idr string) (*Headers, error)
+}
+type WikidataBatchReader interface {
+	ReadWikidataBatch(ctx context.Context, dte *time.Time, idr string, cbk ReadCallback) error
+}
+type WikidataBatchDownloader interface {
+	DownloadWikidataBatch(ctx context.Context, dte *time.Time, idr string, wsk io.WriteSeeker) error
+}
+
 // API interface tha encapsulates the whole functionality of the client.
 // Can be used with composition in unit testing.
 type API interface {
@@ -270,6 +324,21 @@ type API interface {
 	StructuredSnapshotReader
 	StructuredSnapshotDownloader
 	ArticlesStreamer
+	WikidataSnapshotsGetter
+	WikidataSnapshotGetter
+	WikidataSnapshotHeader
+	WikidataSnapshotReader
+	WikidataSnapshotDownloader
+	WikidataChunksGetter
+	WikidataChunkGetter
+	WikidataChunksHeader
+	WikidataChunksReader
+	WikidataChunksDownloader
+	WikidataBatchesGetter
+	WikidataBatchGetter
+	WikidataBatchHeader
+	WikidataBatchReader
+	WikidataBatchDownloader
 }
 
 // NewClient returns a new instance of the Client that implements the API interface.
@@ -803,4 +872,91 @@ func (c *Client) DownloadStructuredSnapshot(ctx context.Context, idr string, wsk
 // as they arrive. The callback function must implement the ReadCallback interface.
 func (c *Client) StreamArticles(ctx context.Context, req *Request, cbk ReadCallback) error {
 	return c.subscribeToEntity(ctx, "articles", req, cbk)
+}
+
+// WIKIDATA SNAPSHOTS
+
+// GetWikidataSnapshots retrieves a list of all Wikidata snapshots and returns an error if any.
+func (c *Client) GetWikidataSnapshots(ctx context.Context, req *Request) ([]*Snapshot, error) {
+	sps := []*Snapshot{}
+	return sps, c.getEntity(ctx, req, "snapshots/wikidata", &sps)
+}
+
+// GetWikidataSnapshot retrieves a single Wikidata snapshot for a specific ID and returns an error if any.
+func (c *Client) GetWikidataSnapshot(ctx context.Context, idr string, req *Request) (*Snapshot, error) {
+	snp := new(Snapshot)
+	return snp, c.getEntity(ctx, req, fmt.Sprintf("snapshots/wikidata/%s", idr), snp)
+}
+
+// HeadWikidataSnapshot retrieves only the headers of a single Wikidata snapshot for a specific ID, and returns an error if any.
+func (c *Client) HeadWikidataSnapshot(ctx context.Context, idr string) (*Headers, error) {
+	return c.headEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/download", idr))
+}
+
+// ReadWikidataSnapshot reads the contents of a single Wikidata snapshots for a specific ID, and invokes the callback function.
+func (c *Client) ReadWikidataSnapshot(ctx context.Context, idr string, cbk ReadCallback) error {
+	return c.readEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/download", idr), cbk)
+}
+
+// DownloadWikidataSnapshot downloads the contents of a single Wikidata snapshot for a specific ID to the specified WriteSeeker.
+func (c *Client) DownloadWikidataSnapshot(ctx context.Context, idr string, wsk io.WriteSeeker) error {
+	return c.downloadEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/download", idr), wsk)
+}
+
+// WIKIDATA CHUNKS
+
+// GetWikidataChunks retrieves a list of all Wikidata snapshot chunks and returns an error if any.
+func (c *Client) GetWikidataChunks(ctx context.Context, sid string, req *Request) ([]*Snapshot, error) {
+	sps := []*Snapshot{}
+	return sps, c.getEntity(ctx, req, fmt.Sprintf("snapshots/wikidata/%s/chunks", sid), &sps)
+}
+
+// GetWikidataChunk retrieves a single Wikidata snapshot chunk for a specific ID and returns an error if any.
+func (c *Client) GetWikidataChunk(ctx context.Context, sid string, idr string, req *Request) (*Snapshot, error) {
+	snp := new(Snapshot)
+	return snp, c.getEntity(ctx, req, fmt.Sprintf("snapshots/wikidata/%s/chunks/%s", sid, idr), snp)
+}
+
+// HeadWikidataChunk retrieves only the headers of a single Wikidata snapshot chunk for a specific ID, and returns an error if any.
+func (c *Client) HeadWikidataChunk(ctx context.Context, sid string, idr string) (*Headers, error) {
+	return c.headEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", sid, idr))
+}
+
+// ReadWikidataChunk reads the contents of a single Wikidata snapshot chunk for a specific ID, and invokes the callback function.
+func (c *Client) ReadWikidataChunk(ctx context.Context, sid string, idr string, cbk ReadCallback) error {
+	return c.readEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", sid, idr), cbk)
+}
+
+// DownloadWikidataChunk downloads the contents of a single Wikidata snapshot chunk for a specific ID to the specified WriteSeeker.
+func (c *Client) DownloadWikidataChunk(ctx context.Context, sid string, idr string, wsk io.WriteSeeker) error {
+	return c.downloadEntity(ctx, fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", sid, idr), wsk)
+}
+
+// WIKIDATA BATCHES
+
+// GetWikidataBatches retrieves a list of Wikidata batches for a specific date and hour, and returns an error if any.
+func (c *Client) GetWikidataBatches(ctx context.Context, dte *time.Time, req *Request) ([]*Batch, error) {
+	bts := []*Batch{}
+	return bts, c.getEntity(ctx, req, fmt.Sprintf("batches/%s/wikidata", dte.Format(DateFormat)), &bts)
+}
+
+// GetWikidataBatch retrieves a single Wikidata batch for a specific date, hour, and ID, and returns an error if any.
+func (c *Client) GetWikidataBatch(ctx context.Context, dte *time.Time, idr string, req *Request) (*Batch, error) {
+	bth := new(Batch)
+	return bth, c.getEntity(ctx, req, fmt.Sprintf("batches/%s/wikidata/%s", dte.Format(DateFormat), idr), bth)
+}
+
+// HeadWikidataBatch retrieves only the headers of a single Wikidata batch for a specific date, hour, and ID.
+func (c *Client) HeadWikidataBatch(ctx context.Context, dte *time.Time, idr string) (*Headers, error) {
+	return c.headEntity(ctx, fmt.Sprintf("batches/%s/wikidata/%s/download", dte.Format(DateFormat), idr))
+}
+
+// ReadWikidataBatch reads the contents of a single Wikidata batch for a specific date, hour, and ID, and invokes the callback function.
+func (c *Client) ReadWikidataBatch(ctx context.Context, dte *time.Time, idr string, cbk ReadCallback) error {
+	return c.readEntity(ctx, fmt.Sprintf("batches/%s/wikidata/%s/download", dte.Format(DateFormat), idr), cbk)
+}
+
+// DownloadWikidataBatch downloads the contents of a single Wikidata batch for a specific date, hour, and ID to the WriteSeeker.
+func (c *Client) DownloadWikidataBatch(ctx context.Context, dte *time.Time, idr string, wsk io.WriteSeeker) error {
+	return c.downloadEntity(ctx, fmt.Sprintf("batches/%s/wikidata/%s/download", dte.Format(DateFormat), idr), wsk)
 }

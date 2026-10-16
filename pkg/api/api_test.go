@@ -1702,3 +1702,685 @@ func TestStreamArticles(t *testing.T) {
 		suite.Run(t, tcs)
 	}
 }
+
+type getWikidataSnapshotsTestSuite struct {
+	baseEntityTestSuite
+}
+
+func (s *getWikidataSnapshotsTestSuite) SetupSuite() {
+	s.pth = "snapshots/wikidata"
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataSnapshotsTestSuite) TestGetWikidataSnapshots() {
+	sps, err := s.clt.GetWikidataSnapshots(s.ctx, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(sps)
+		s.Error(err)
+	} else {
+		s.NotEmpty(sps)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataSnapshots(t *testing.T) {
+	for _, tcs := range []*getWikidataSnapshotsTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/snapshots.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getWikidataSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *getWikidataSnapshotTestSuite) SetupSuite() {
+	s.idr = "items"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataSnapshotTestSuite) TestGetWikidataSnapshot() {
+	spt, err := s.clt.GetWikidataSnapshot(s.ctx, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(spt.Identifier)
+		s.Error(err)
+	} else {
+		s.NotEmpty(spt.Identifier)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataSnapshot(t *testing.T) {
+	for _, tcs := range []*getWikidataSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/snapshot.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headWikidataSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *headWikidataSnapshotTestSuite) SetupSuite() {
+	s.idr = "items"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headWikidataSnapshotTestSuite) TestHeadWikidataSnapshot() {
+	shs, err := s.clt.HeadWikidataSnapshot(s.ctx, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(shs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(shs.ContentLength)
+		s.NotEmpty(shs.ContentType)
+		s.NoError(err)
+	}
+}
+
+func TestHeadWikidataSnapshot(t *testing.T) {
+	for _, tcs := range []*headWikidataSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type readWikidataSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *readWikidataSnapshotTestSuite) SetupSuite() {
+	s.idr = "items"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readWikidataSnapshotTestSuite) TestReadWikidataSnapshot() {
+	nmc := 0
+	err := s.clt.ReadWikidataSnapshot(s.ctx, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadWikidataSnapshot(t *testing.T) {
+	for _, tcs := range []*readWikidataSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadWikidataSnapshotTestSuite struct {
+	baseEntityTestSuite
+	idr string
+}
+
+func (s *downloadWikidataSnapshotTestSuite) SetupSuite() {
+	s.idr = "items"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/download", s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadWikidataSnapshotTestSuite) TestDownloadWikidataSnapshot() {
+	tmf, err := os.CreateTemp("", "spt_tmp.tar.gz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer tmf.Close()
+
+	err = s.clt.DownloadWikidataSnapshot(s.ctx, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadWikidataSnapshot(t *testing.T) {
+	for _, tcs := range []*downloadWikidataSnapshotTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getWikidataChunksTestSuite struct {
+	baseEntityTestSuite
+	sid string
+}
+
+func (s *getWikidataChunksTestSuite) SetupSuite() {
+	s.sid = "items"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/chunks", s.sid)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataChunksTestSuite) TestGetWikidataChunks() {
+	sps, err := s.clt.GetWikidataChunks(s.ctx, s.sid, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(sps)
+		s.Error(err)
+	} else {
+		s.NotEmpty(sps)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataChunks(t *testing.T) {
+	for _, tcs := range []*getWikidataChunksTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/chunks.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getWikidataChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *getWikidataChunkTestSuite) SetupSuite() {
+	s.sid = "items"
+	s.idr = "0"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/chunks/%s", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataChunkTestSuite) TestGetWikidataChunk() {
+	spt, err := s.clt.GetWikidataChunk(s.ctx, s.sid, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(spt.Identifier)
+		s.Error(err)
+	} else {
+		s.NotEmpty(spt.Identifier)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataChunk(t *testing.T) {
+	for _, tcs := range []*getWikidataChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/chunk.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headWikidataChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *headWikidataChunkTestSuite) SetupSuite() {
+	s.sid = "items"
+	s.idr = "0"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headWikidataChunkTestSuite) TestHeadWikidataChunk() {
+	shs, err := s.clt.HeadWikidataChunk(s.ctx, s.sid, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(shs)
+		s.Error(err)
+	} else {
+		s.NotEmpty(shs.ContentLength)
+		s.NotEmpty(shs.ContentType)
+		s.NoError(err)
+	}
+}
+
+func TestHeadWikidataChunk(t *testing.T) {
+	for _, tcs := range []*headWikidataChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type readWikidataChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *readWikidataChunkTestSuite) SetupSuite() {
+	s.sid = "items"
+	s.idr = "0"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readWikidataChunkTestSuite) TestReadWikidataChunk() {
+	nmc := 0
+	err := s.clt.ReadWikidataChunk(s.ctx, s.sid, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadWikidataChunk(t *testing.T) {
+	for _, tcs := range []*readWikidataChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadWikidataChunkTestSuite struct {
+	baseEntityTestSuite
+	sid string
+	idr string
+}
+
+func (s *downloadWikidataChunkTestSuite) SetupSuite() {
+	s.sid = "items"
+	s.idr = "0"
+	s.pth = fmt.Sprintf("snapshots/wikidata/%s/chunks/%s/download", s.sid, s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadWikidataChunkTestSuite) TestDownloadWikidataChunk() {
+	tmf, err := os.CreateTemp("", "spt_tmp.tar.gz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer tmf.Close()
+
+	err = s.clt.DownloadWikidataChunk(s.ctx, s.sid, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadWikidataChunk(t *testing.T) {
+	for _, tcs := range []*downloadWikidataChunkTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0_chunk_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getWikidataBatchesTestSuite struct {
+	baseEntityTestSuite
+	dte *time.Time
+}
+
+func (s *getWikidataBatchesTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.pth = fmt.Sprintf("batches/%s/wikidata", s.dte.Format(api.DateFormat))
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataBatchesTestSuite) TestGetWikidataBatches() {
+	bts, err := s.clt.GetWikidataBatches(s.ctx, s.dte, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(bts)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bts)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataBatches(t *testing.T) {
+	for _, tcs := range []*getWikidataBatchesTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/batches.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type getWikidataBatchTestSuite struct {
+	baseEntityTestSuite
+	dte *time.Time
+	idr string
+}
+
+func (s *getWikidataBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "items"
+	s.pth = fmt.Sprintf("batches/%s/wikidata/%s", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *getWikidataBatchTestSuite) TestGetWikidataBatch() {
+	bth, err := s.clt.GetWikidataBatch(s.ctx, s.dte, s.idr, s.req)
+
+	if s.sts != http.StatusOK {
+		s.Empty(bth)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bth.Identifier)
+		s.NoError(err)
+	}
+}
+
+func TestGetWikidataBatch(t *testing.T) {
+	for _, tcs := range []*getWikidataBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/batch.json",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type headWikidataBatchTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *headWikidataBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "items"
+	s.pth = fmt.Sprintf("batches/%s/wikidata/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *headWikidataBatchTestSuite) TestHeadWikidataBatch() {
+	bth, err := s.clt.HeadWikidataBatch(s.ctx, s.dte, s.idr)
+
+	if s.sts != http.StatusOK {
+		s.Empty(bth)
+		s.Error(err)
+	} else {
+		s.NotEmpty(bth.ContentLength)
+		s.NotEmpty(bth.ContentType)
+		s.NoError(err)
+	}
+}
+
+func TestHeadWikidataBatch(t *testing.T) {
+	for _, tcs := range []*headWikidataBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				mtd: http.MethodHead,
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type readWikidataBatchTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *readWikidataBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "items"
+	s.pth = fmt.Sprintf("batches/%s/wikidata/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *readWikidataBatchTestSuite) TestReadWikidataBatch() {
+	nmc := 0
+	err := s.clt.ReadWikidataBatch(s.ctx, s.dte, s.idr, func(art *api.Article) error {
+		s.NotEmpty(art.Name)
+		s.NotEmpty(art.Identifier)
+		nmc++
+		return nil
+	})
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+		s.Zero(nmc)
+	} else {
+		s.NoError(err)
+		s.NotZero(nmc)
+	}
+}
+
+func TestReadWikidataBatch(t *testing.T) {
+	for _, tcs := range []*readWikidataBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusUnauthorized,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
+
+type downloadWikidataBatchTestSuite struct {
+	baseEntityTestSuite
+	idr string
+	dte *time.Time
+}
+
+func (s *downloadWikidataBatchTestSuite) SetupSuite() {
+	dtn := time.Now()
+	s.dte = &dtn
+	s.idr = "items"
+	s.pth = fmt.Sprintf("batches/%s/wikidata/%s/download", s.dte.Format(api.DateFormat), s.idr)
+	s.baseEntityTestSuite.SetupSuite()
+}
+
+func (s *downloadWikidataBatchTestSuite) TestDownloadWikidataBatch() {
+	tmf, err := os.CreateTemp("", "bth_tmp.tar.gz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer tmf.Close()
+
+	err = s.clt.DownloadWikidataBatch(s.ctx, s.dte, s.idr, tmf)
+
+	if s.sts != http.StatusOK {
+		s.Error(err)
+	} else {
+		s.NoError(err)
+	}
+}
+
+func TestDownloadWikidataBatch(t *testing.T) {
+	for _, tcs := range []*downloadWikidataBatchTestSuite{
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusOK,
+				fph: "testdata/simplewiki_namespace_0.tar.gz",
+			},
+		},
+		{
+			baseEntityTestSuite: baseEntityTestSuite{
+				sts: http.StatusNotFound,
+				fph: "testdata/error.json",
+			},
+		},
+	} {
+		suite.Run(t, tcs)
+	}
+}
